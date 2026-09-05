@@ -1,6 +1,6 @@
 {
   "name": "Bentexto - Bengali Word Game",
-  "description": "Daily Bengali contextual word guessing game. Guess the secret word with semantic AI similarity, phonetic typing, and daily streaks.",
+  "description": "Bentexto is the #1 Bengali Contexto and daily Bengali word guessing game. Guess secret words with AI semantic similarity, phonetic typing, and unlimited practice.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -8,6 +8,8 @@ import {
   Play,
   Sparkles,
   Keyboard,
+  BookOpen,
+  ChevronDown,
 } from 'lucide-react';
 import {
   getCurrentWeekDays,
@@ -52,6 +54,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const [isFaqOpen, setIsFaqOpen] = useState(false);
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [legalTab, setLegalTab] = useState<'privacy' | 'terms'>('privacy');
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const handleToggleTheme = () => {
     const root = document.documentElement;
@@ -87,7 +90,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
         {/* Central Content Column */}
         <div className="w-full max-w-md flex flex-col items-center">
-          {/* Brand New Modern Bentexto Logo */}
+          {/* Brand New Modern Bentexto Logo & SEO Headings */}
           <div className="mb-4 flex flex-col items-center text-center">
             <Logo
               size="xl"
@@ -95,8 +98,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               showSubtitle={true}
               className="justify-center"
             />
-            <p className="text-xs sm:text-sm text-gray-300 font-medium mt-2 max-w-xs text-center leading-relaxed">
-              Find the secret word by semantic proximity with AI (কৃত্রিম বুদ্ধিমত্তা চালিত বাংলা শব্দ ধাঁধা)
+            <h1 className="text-xs sm:text-sm text-gray-200 font-semibold mt-2.5 max-w-sm text-center leading-relaxed">
+              Bengali Contexto &amp; Word Guessing Game (বাংলা কনটেক্সটো)
+            </h1>
+            <p className="text-[11px] sm:text-xs text-gray-400 mt-0.5 max-w-xs text-center leading-normal">
+              Find the secret word with AI semantic proximity • প্রতিদিনের বাংলা শব্দ মেলানোর খেলা
             </p>
           </div>
 
@@ -248,6 +254,43 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <MessageSquare className="h-4 w-4 text-gray-400" />
               <span>Feedback (মতামত)</span>
             </button>
+
+            {/* SEO & Knowledge Accordion */}
+            <div className="w-full rounded-xl border border-[#253556] bg-[#15213B]/50 overflow-hidden text-left mt-1">
+              <button
+                type="button"
+                onClick={() => setIsAboutOpen(!isAboutOpen)}
+                className="w-full flex items-center justify-between p-3 text-xs font-semibold text-gray-300 hover:text-white transition cursor-pointer"
+                aria-expanded={isAboutOpen}
+              >
+                <span className="flex items-center gap-2">
+                  <BookOpen className="h-3.5 w-3.5 text-[#38BDF8]" />
+                  <span>About Bengali Contexto (বাংলা কনটেক্সটো)</span>
+                </span>
+                <ChevronDown
+                  className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
+                    isAboutOpen ? 'rotate-180 text-[#38BDF8]' : ''
+                  }`}
+                />
+              </button>
+
+              {isAboutOpen && (
+                <div className="p-3.5 pt-1 text-[11px] sm:text-xs text-gray-400 leading-relaxed border-t border-[#253556]/60 space-y-2.5">
+                  <p>
+                    <strong className="text-white">Bentexto</strong> is the premier <strong className="text-[#38BDF8]">Bengali Contexto</strong> and <strong className="text-[#38BDF8]">Bengali word guessing game</strong> (বাংলা কনটেক্সটো ও শব্দ মেলানোর খেলা). Inspired by viral contextual word games like Contexto and Wordle, Bentexto challenges you to uncover a secret Bengali word using artificial intelligence semantic proximity rankings.
+                  </p>
+                  <div>
+                    <h2 className="font-bold text-white text-xs mb-1">How the Bengali Word Guessing Game Works:</h2>
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li>Type any Bengali word or write phonetically in English (for example, typing <span className="font-mono text-gray-300">"bristi"</span> gives <strong className="text-white">বৃষ্টি</strong>, and <span className="font-mono text-gray-300">"jol"</span> gives <strong className="text-white">জল</strong>).</li>
+                      <li>The AI calculates how closely related your guess is to the secret target word. Rank <strong>#1</strong> is the winning word!</li>
+                      <li>Green numbers mean you are very close; orange and red indicate greater conceptual distance.</li>
+                      <li>Enjoy a fresh <strong>Daily Puzzle</strong> every day at midnight or switch to <strong>Unlimited Practice</strong> mode anytime.</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Legal Links Footer */}
             <div className="flex items-center gap-4 pt-2 text-xs text-gray-400 font-normal">

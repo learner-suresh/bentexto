@@ -1,0 +1,6 @@
+# Robots.txt for Bentexto - Bengali Contexto & Bengali Word Guessing Game
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://bentexto.com/sitemap.xml
