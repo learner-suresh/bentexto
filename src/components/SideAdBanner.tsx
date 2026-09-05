@@ -12,7 +12,7 @@ interface SideAdBannerProps {
 export const SideAdBanner: React.FC<SideAdBannerProps> = ({
   side,
   slotId,
-  adClient = 'ca-pub-0000000000000000',
+  adClient = 'ca-pub-3199860809392813',
   adsEnabled = true,
   className = '',
 }) => {
@@ -20,7 +20,12 @@ export const SideAdBanner: React.FC<SideAdBannerProps> = ({
 
   useEffect(() => {
     try {
-      if (typeof window !== 'undefined' && window.adsbygoogle) {
+      if (
+        typeof window !== 'undefined' &&
+        window.adsbygoogle &&
+        adRef.current &&
+        !adRef.current.getAttribute('data-adsbygoogle-status')
+      ) {
         window.adsbygoogle.push({});
       }
     } catch (err) {

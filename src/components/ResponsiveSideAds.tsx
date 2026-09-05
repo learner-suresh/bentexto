@@ -12,7 +12,7 @@ interface ResponsiveSideAdsProps {
 export const ResponsiveSideAds: React.FC<ResponsiveSideAdsProps> = ({
   leftSlotId = '1002003004',
   rightSlotId = '5006007008',
-  adClient = 'ca-pub-0000000000000000',
+  adClient = 'ca-pub-3199860809392813',
   adsEnabled = true,
   className = '',
 }) => {
@@ -22,8 +22,12 @@ export const ResponsiveSideAds: React.FC<ResponsiveSideAdsProps> = ({
   useEffect(() => {
     try {
       if (typeof window !== 'undefined' && window.adsbygoogle) {
-        window.adsbygoogle.push({});
-        window.adsbygoogle.push({});
+        if (leftAdRef.current && !leftAdRef.current.getAttribute('data-adsbygoogle-status')) {
+          window.adsbygoogle.push({});
+        }
+        if (rightAdRef.current && !rightAdRef.current.getAttribute('data-adsbygoogle-status')) {
+          window.adsbygoogle.push({});
+        }
       }
     } catch (err) {
       console.log('AdSense mobile side ads init info:', err);

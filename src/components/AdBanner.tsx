@@ -20,7 +20,7 @@ interface AdBannerProps {
 export const AdBanner: React.FC<AdBannerProps> = ({
   slotType = 'in-content',
   slotId = '1234567890',
-  adClient = 'ca-pub-0000000000000000',
+  adClient = 'ca-pub-3199860809392813',
   className = '',
   showDismiss = true,
 }) => {
@@ -30,7 +30,12 @@ export const AdBanner: React.FC<AdBannerProps> = ({
 
   useEffect(() => {
     try {
-      if (typeof window !== 'undefined' && window.adsbygoogle) {
+      if (
+        typeof window !== 'undefined' &&
+        window.adsbygoogle &&
+        adRef.current &&
+        !adRef.current.getAttribute('data-adsbygoogle-status')
+      ) {
         window.adsbygoogle.push({});
         setAdLoaded(true);
       }
