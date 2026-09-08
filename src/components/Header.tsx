@@ -34,6 +34,7 @@ interface HeaderProps {
   onOpenFeedback?: () => void;
   onRequestHint?: () => void;
   onOpenLegal?: () => void;
+  onOpenAbout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -52,6 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenFeedback,
   onRequestHint,
   onOpenLegal,
+  onOpenAbout,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -119,9 +121,9 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right Controls */}
       <div className="flex items-center gap-1.5 sm:gap-2.5">
-        {/* Daily Active Players Counter */}
-        <div className="hidden sm:block">
-          <DailyUserCounterBadge variant="compact" />
+        {/* Real-Time Live Players Counter */}
+        <div className="hidden xs:block">
+          <DailyUserCounterBadge variant="compact" showModalOnClick={true} />
         </div>
 
         {/* Streak Indicator */}
@@ -194,6 +196,11 @@ export const Header: React.FC<HeaderProps> = ({
 
           {menuOpen && (
             <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#15213B] border border-[#253556] shadow-2xl p-1.5 z-50 animate-fade-in text-xs font-medium">
+              {/* Real-time live counter status in menu for mobile */}
+              <div className="xs:hidden px-2.5 py-2 mb-1.5 rounded-lg bg-[#0D1527] border border-[#253556]/80 flex justify-center">
+                <DailyUserCounterBadge variant="compact" showModalOnClick={true} />
+              </div>
+
               {/* Previous Games */}
               {onOpenPreviousGames && (
                 <button
@@ -289,6 +296,21 @@ export const Header: React.FC<HeaderProps> = ({
                 >
                   <MessageSquare className="h-4 w-4 text-[#A78BFA]" />
                   <span>Feedback (মতামত)</span>
+                </button>
+              )}
+
+              {/* About Us */}
+              {onOpenAbout && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    onOpenAbout();
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1E2C4A] hover:text-gray-200 transition text-left cursor-pointer text-[11px]"
+                >
+                  <Shield className="h-3.5 w-3.5 text-gray-400" />
+                  <span>About Bentexto</span>
                 </button>
               )}
 

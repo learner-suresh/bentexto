@@ -3,6 +3,7 @@ import { X, Flame, Clock } from 'lucide-react';
 import { GameStats } from '../types';
 import { getTimeUntilMidnight, toBengaliDigits } from '../utils/dateAndStreak';
 import { DailyUserCounterBadge } from './DailyUserCounterBadge';
+import { DailyStreakGraph } from './DailyStreakGraph';
 
 interface StatsModalProps {
   stats: GameStats;
@@ -79,6 +80,9 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, isOpen }
             </div>
           </div>
         </div>
+
+        {/* Daily Streak Graph */}
+        <DailyStreakGraph stats={stats} />
 
         {/* Guess Count Distribution */}
         <div className="mb-6">

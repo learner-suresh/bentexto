@@ -33,6 +33,13 @@ export interface GameStats {
     '51-100': number;
     '100+': number;
   };
+  streakHistory?: {
+    dateKey: string;
+    dayNumber: number;
+    status: 'won' | 'lost' | 'none';
+    guessesCount?: number;
+    streak?: number;
+  }[];
 }
 
 export interface DailyGameState {

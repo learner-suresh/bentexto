@@ -27,6 +27,8 @@ import { AdBanner } from './components/AdBanner';
 import { SideAdBanner } from './components/SideAdBanner';
 import { ResponsiveSideAds } from './components/ResponsiveSideAds';
 import { LegalModal } from './components/LegalModal';
+import { AboutModal } from './components/AboutModal';
+import { ConsentBanner } from './components/ConsentBanner';
 import { DailyUserCounterBadge } from './components/DailyUserCounterBadge';
 import {
   Sparkles,
@@ -93,7 +95,8 @@ export default function App() {
   const [isLanguageOpen, setIsLanguageOpen] = useState<boolean>(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState<boolean>(false);
   const [isLegalOpen, setIsLegalOpen] = useState<boolean>(false);
-  const [legalTab, setLegalTab] = useState<'privacy' | 'terms'>('privacy');
+  const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'contact'>('privacy');
+  const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
 
   // Global keyboard shortcuts for user friendliness (Esc to close, / to focus input)
   useEffect(() => {
@@ -438,6 +441,7 @@ export default function App() {
         onOpenLanguage={() => setIsLanguageOpen(true)}
         onOpenFeedback={() => setIsFeedbackOpen(true)}
         onRequestHint={handleRequestHint}
+        onOpenAbout={() => setIsAboutOpen(true)}
         onOpenLegal={() => {
           setLegalTab('privacy');
           setIsLegalOpen(true);
@@ -461,7 +465,7 @@ export default function App() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#15213B] border border-[#253556] text-xs font-mono text-[#0095FF] font-bold uppercase tracking-wider">
               {isPractice ? 'Unlimited Practice' : `Game #${dayNumber}`}
             </div>
-            <DailyUserCounterBadge variant="inline" />
+            <DailyUserCounterBadge variant="inline" showModalOnClick={true} />
           </div>
           <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
             Find the secret word (গোপন শব্দটি খুঁজুন)
@@ -759,6 +763,13 @@ export default function App() {
           </button>
           <span>•</span>
           <button
+            onClick={() => setIsAboutOpen(true)}
+            className="hover:text-white transition cursor-pointer"
+          >
+            About
+          </button>
+          <span>•</span>
+          <button
             onClick={() => {
               setLegalTab('privacy');
               setIsLegalOpen(true);
@@ -778,11 +789,31 @@ export default function App() {
             Terms
           </button>
           <span>•</span>
+          <button
+            onClick={() => {
+              setLegalTab('contact');
+              setIsLegalOpen(true);
+            }}
+            className="hover:text-white transition cursor-pointer"
+          >
+            Contact
+          </button>
+          <span>•</span>
           <span>BENTEXTO • BENGALI WORD GAME</span>
         </div>
       </footer>
 
       {/* Modals */}
+      <AboutModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+        onOpenLegal={(tab) => {
+          setLegalTab(tab);
+          setIsLegalOpen(true);
+        }}
+        onOpenFeedback={() => setIsFeedbackOpen(true)}
+      />
+
       <LegalModal
         isOpen={isLegalOpen}
         onClose={() => setIsLegalOpen(false)}
@@ -837,6 +868,14 @@ export default function App() {
       <FeedbackModal
         isOpen={isFeedbackOpen}
         onClose={() => setIsFeedbackOpen(false)}
+      />
+
+      {/* Cookie & Privacy Consent Banner (GDPR / CCPA / AdSense) */}
+      <ConsentBanner
+        onOpenPrivacy={() => {
+          setLegalTab('privacy');
+          setIsLegalOpen(true);
+        }}
       />
     </div>
   );

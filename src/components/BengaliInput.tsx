@@ -226,20 +226,25 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
         </p>
       )}
 
-      {/* Quick Starter Chips */}
+      {/* Quick Starter Chips & Conjunct hint */}
       {!rawInput && !errorMsg && (
-        <div className="mt-2 flex items-center justify-center flex-wrap gap-1.5 text-xs text-gray-400">
-          <span className="text-[11px] uppercase tracking-wider font-semibold text-gray-400">Starter words:</span>
-          {['bristi', 'nodi', 'shurjo', 'ful', 'pani'].map((sample) => (
-            <button
-              key={sample}
-              type="button"
-              onClick={() => setRawInput(sample)}
-              className="rounded-md bg-[#15213B] border border-[#253556] px-2 py-0.5 font-mono text-[11px] text-gray-300 hover:text-white hover:border-[#0095FF] transition cursor-pointer"
-            >
-              {sample}
-            </button>
-          ))}
+        <div className="mt-2 flex flex-col items-center gap-1.5 text-xs text-gray-400">
+          <div className="flex items-center justify-center flex-wrap gap-1.5">
+            <span className="text-[11px] uppercase tracking-wider font-semibold text-gray-400">Starter words:</span>
+            {['bristi', 'krishi', 'shurjo', 'shanti', 'ful', 'pani'].map((sample) => (
+              <button
+                key={sample}
+                type="button"
+                onClick={() => setRawInput(sample)}
+                className="rounded-md bg-[#15213B] border border-[#253556] px-2 py-0.5 font-mono text-[11px] text-gray-300 hover:text-white hover:border-[#0095FF] transition cursor-pointer"
+              >
+                {sample}
+              </button>
+            ))}
+          </div>
+          <div className="text-[10px] text-gray-400 text-center">
+            💡 Tip: Type <span className="font-mono text-cyan-400">kri</span> &rarr; <span className="text-white font-semibold">কৃ</span> (e.g. <span className="font-mono text-gray-300">krishi</span> &rarr; কৃষি, <span className="font-mono text-gray-300">prokriti</span> &rarr; প্রকৃতি), <span className="font-mono text-gray-300">bristi</span> (বৃষ্টি), or use <span className="font-mono text-cyan-400">+</span> for conjuncts
+          </div>
         </div>
       )}
 

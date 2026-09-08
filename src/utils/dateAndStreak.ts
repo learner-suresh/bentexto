@@ -65,7 +65,8 @@ export function getInitialStats(): GameStats {
       '31-50': 0,
       '51-100': 0,
       '100+': 0
-    }
+    },
+    streakHistory: []
   };
 }
 
@@ -73,7 +74,11 @@ export function loadUserStats(): GameStats {
   try {
     const raw = localStorage.getItem(STATS_STORAGE_KEY);
     if (raw) {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (!parsed.streakHistory) {
+        parsed.streakHistory = [];
+      }
+      return parsed;
     }
   } catch (e) {
     console.error('Failed to load stats from localStorage', e);
@@ -132,6 +137,30 @@ export function recordGameWin(currentDay: number, totalGuesses: number, isPracti
     stats.guessDistribution['51-100'] += 1;
   } else {
     stats.guessDistribution['100+'] += 1;
+  }
+
+  // Record into streakHistory
+  if (!stats.streakHistory) {
+    stats.streakHistory = [];
+  }
+  const todayKey = getTodayDateKey();
+  const existingIdx = stats.streakHistory.findIndex(h => h.dateKey === todayKey || h.dayNumber === currentDay);
+  const entry = {
+    dateKey: todayKey,
+    dayNumber: currentDay,
+    status: 'won' as const,
+    guessesCount: totalGuesses,
+    streak: stats.currentStreak
+  };
+  if (existingIdx >= 0) {
+    stats.streakHistory[existingIdx] = entry;
+  } else {
+    stats.streakHistory.push(entry);
+  }
+
+  // Keep last 60 days of history
+  if (stats.streakHistory.length > 60) {
+    stats.streakHistory = stats.streakHistory.slice(-60);
   }
 
   saveUserStats(stats);
@@ -250,6 +279,77 @@ export function getPastDaysList(count: number = 20): WeekDayInfo[] {
   return list;
 }
 
+export function getDailyStreakHistory(daysCount: number = 14): {
+  dayName: string;
+  dayOfMonth: number;
+  dateKey: string;
+  dayNumber: number;
+  isToday: boolean;
+  status: 'won' | 'lost' | 'missed' | 'pending';
+  guessesCount?: number;
+  streak?: number;
+}[] {
+  const stats = loadUserStats();
+  const now = new Date();
+  const todayKey = getTodayDateKey();
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const result = [];
+
+  // Generate for past daysCount days in chronological order (oldest to newest)
+  for (let i = daysCount - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const dateKey = `${y}-${m}-${day}`;
+
+    const diffTime = d.getTime() - EPOCH_DATE;
+    const dayNum = Math.max(1, Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1);
+    const isToday = dateKey === todayKey;
+
+    // Check stats history first
+    const historyEntry = stats.streakHistory?.find(h => h.dateKey === dateKey || h.dayNumber === dayNum);
+
+    // Also check localStorage daily save
+    let isSavedSolved = false;
+    let savedGuessCount: number | undefined = undefined;
+    try {
+      const saved = localStorage.getItem(`bentexto_day_${dateKey}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        isSavedSolved = !!parsed.isSolved;
+        if (parsed.guesses && Array.isArray(parsed.guesses)) {
+          savedGuessCount = parsed.guesses.length;
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    let status: 'won' | 'lost' | 'missed' | 'pending' = 'missed';
+    if (historyEntry) {
+      status = historyEntry.status === 'won' ? 'won' : 'lost';
+    } else if (isSavedSolved) {
+      status = 'won';
+    } else if (isToday) {
+      status = 'pending';
+    }
+
+    result.push({
+      dayName: dayNames[d.getDay()],
+      dayOfMonth: d.getDate(),
+      dateKey,
+      dayNumber: dayNum,
+      isToday,
+      status,
+      guessesCount: historyEntry?.guessesCount || savedGuessCount,
+      streak: historyEntry?.streak,
+    });
+  }
+
+  return result;
+}
+
 export function recordGameSurrender(currentDay: number, isPractice: boolean = false): GameStats {
   const stats = loadUserStats();
   if (isPractice) return stats;
@@ -258,6 +358,24 @@ export function recordGameSurrender(currentDay: number, isPractice: boolean = fa
     stats.gamesPlayed += 1;
     stats.currentStreak = 0; // streak resets on give up
     stats.lastPlayedDay = currentDay;
+
+    if (!stats.streakHistory) {
+      stats.streakHistory = [];
+    }
+    const todayKey = getTodayDateKey();
+    const existingIdx = stats.streakHistory.findIndex(h => h.dateKey === todayKey || h.dayNumber === currentDay);
+    const entry = {
+      dateKey: todayKey,
+      dayNumber: currentDay,
+      status: 'lost' as const,
+      streak: 0
+    };
+    if (existingIdx >= 0) {
+      stats.streakHistory[existingIdx] = entry;
+    } else {
+      stats.streakHistory.push(entry);
+    }
+
     saveUserStats(stats);
   }
   return stats;

@@ -120,8 +120,135 @@ export const COMMON_BENGALI_PHONETICS: Record<string, string> = {
   chhatro: 'ছাত্র',
   doctor: 'ডাক্তার',
   shasto: 'স্বাস্থ্য',
+  shasthya: 'স্বাস্থ্য',
   osud: 'ওষুধ',
   oushodh: 'ঔষধ',
+  juktakkhor: 'যুক্তাক্ষর',
+  juktoborno: 'যুক্তবর্ণ',
+  jukto: 'যুক্ত',
+  baky: 'বাক্য',
+  bakya: 'বাক্য',
+  shobdo: 'শব্দ',
+  sobdo: 'শব্দ',
+  shikka: 'শিক্ষা',
+  shikkha: 'শিক্ষা',
+  parikkha: 'পরীক্ষা',
+  porikkha: 'পরীক্ষা',
+  gyan: 'জ্ঞান',
+  bijnan: 'বিজ্ঞান',
+  biggan: 'বিজ্ঞান',
+  prosno: 'প্রশ্ন',
+  uttor: 'উত্তর',
+  roshogolla: 'রসগোল্লা',
+  mistee: 'মিষ্টি',
+  mishti: 'মিষ্টি',
+  sristi: 'সৃষ্টি',
+  shristi: 'সৃষ্টি',
+  drusti: 'দৃষ্টি',
+  drishti: 'দৃষ্টি',
+  rokt: 'রক্ত',
+  rokto: 'রক্ত',
+  shongram: 'সংগ্রাম',
+  songram: 'সংগ্রাম',
+  deshprem: 'দেশপ্রেম',
+  shanto: 'শান্ত',
+  shanti: 'শান্তি',
+  klanto: 'ক্লান্ত',
+  shanto2: 'শান্ত',
+  bistar: 'বিস্তার',
+  pustok: 'পুস্তক',
+  kosto: 'কষ্ট',
+  basto: 'ব্যস্ত',
+  byasto: 'ব্যস্ত',
+  dhonno: 'ধন্য',
+  dhonnobad: 'ধন্যবাদ',
+  dhonyobad: 'ধন্যবাদ',
+  onnanno: 'অন্যান্য',
+  onno: 'অন্য',
+  jonmo: 'জন্ম',
+  mrityu: 'মৃত্যু',
+  amrita: 'অমৃত',
+  omrito: 'অমৃত',
+  // Vocalic R / Ri-kar (ঋ, ৃ) common vocabulary
+  kri: 'কৃ',
+  krri: 'কৃ',
+  kripon: 'কৃপণ',
+  kripa: 'কৃপা',
+  krishi: 'কৃষি',
+  krisi: 'কৃষি',
+  krishok: 'কৃষক',
+  krisok: 'কৃষক',
+  krishna: 'কৃষ্ণ',
+  krisna: 'কৃষ্ণ',
+  krishti: 'কৃষ্টি',
+  kristi: 'কৃষ্টি',
+  krimi: 'কৃমি',
+  kritrim: 'কৃত্রিম',
+  krittim: 'কৃত্রিম',
+  kriti: 'কৃতি',
+  krito: 'কৃত',
+  kritoggno: 'কৃতজ্ঞ',
+  kritogno: 'কৃতজ্ঞ',
+  kritoggo: 'কৃতজ্ঞ',
+  kricchro: 'কৃচ্ছ্র',
+  prokriti: 'প্রকৃতি',
+  prokiti: 'প্রকৃতি',
+  akriti: 'আকৃতি',
+  songskriti: 'সংস্কৃতি',
+  shongskriti: 'সংস্কৃতি',
+  sukriti: 'সুকৃতি',
+  bikriti: 'বিকৃতি',
+  griho: 'গৃহ',
+  grihini: 'গৃহিণী',
+  grihostho: 'গৃহস্থ',
+  ghrina: 'ঘৃণা',
+  ghrit: 'ঘৃত',
+  ghrito: 'ঘৃত',
+  trishna: 'তৃষ্ণা',
+  tripti: 'তৃপ্তি',
+  trin: 'তৃণ',
+  trino: 'তৃণ',
+  tritiyo: 'তৃতীয়',
+  drishyo: 'দৃশ্য',
+  dridho: 'দৃঢ়',
+  driro: 'দৃঢ়',
+  drishtanto: 'দৃষ্টান্ত',
+  dhriti: 'ধৃতি',
+  nrityo: 'নৃত্য',
+  nritto: 'নৃত্য',
+  nripoti: 'নৃপতি',
+  prithibi: 'পৃথিবী',
+  pritibi: 'পৃথিবী',
+  prishtho: 'পৃষ্ঠা',
+  prishtha: 'পৃষ্ঠা',
+  prithok: 'পৃথক',
+  brikkho: 'বৃক্ষ',
+  briddho: 'বৃদ্ধ',
+  britta: 'বৃত্ত',
+  brihot: 'বৃহৎ',
+  briddhi: 'বৃদ্ধি',
+  britha: 'বৃথা',
+  mrito: 'মৃত',
+  mrigo: 'মৃগ',
+  mridu: 'মৃদু',
+  srijon: 'সৃজন',
+  shringo: 'শৃঙ্গ',
+  shrigal: 'শৃগাল',
+  hridoy: 'হৃদয়',
+  hrid: 'হৃৎ',
+  hridrog: 'হৃদরোগ',
+  smriti: 'স্মৃতি',
+  shmriti: 'স্মৃতি',
+  bismriti: 'বিস্মৃতি',
+  rishi: 'ঋষি',
+  rin: 'ঋণ',
+  ritu: 'ঋতু',
+  rigbed: 'ঋগ্বেদ',
+  // Foreign/borrowed ro-fala + i words
+  kriket: 'ক্রিকেট',
+  cricket: 'ক্রিকেট',
+  krim: 'ক্রিম',
+  cream: 'ক্রিম',
 };
 
 // Vowel signs (Kars) attached to consonants
@@ -144,6 +271,9 @@ const KAR_MAP: Record<string, string> = {
   ou: 'ৌ',
   OU: 'ৌ',
   rri: 'ৃ',
+  ri: 'ৃ',
+  RI: 'ৃ',
+  Ri: 'ৃ',
 };
 
 // Independent vowels
@@ -166,78 +296,171 @@ const VOWEL_MAP: Record<string, string> = {
   ou: 'ঔ',
   OU: 'ঔ',
   rri: 'ঋ',
+  ri: 'ঋ',
+  RI: 'ঋ',
+  Ri: 'ঋ',
 };
 
 // Conjuncts / Compound consonants (longest match first)
-const CONJUNCT_MAP: Record<string, string> = {
-  kkh: 'ক্ষ',
+export const CONJUNCT_MAP: Record<string, string> = {
+  // 4-letter conjuncts
   kkhy: 'ক্ষ্য',
   kkhm: 'ক্ষ্ম',
+  shchm: 'শ্ছ্ম',
+  nggkh: 'ঙ্খ্য',
+
+  // 3-letter conjuncts
+  kkh: 'ক্ষ',
+  ksh: 'ক্ষ',
   jny: 'জ্ঞ',
   gny: 'জ্ঞ',
+  gya: 'জ্ঞ',
   shch: 'শ্চ',
-  shchm: 'শ্চ',
   shk: 'ষ্ক',
   shT: 'ষ্ট',
+  sht: 'ষ্ট',
   shTh: 'ষ্ঠ',
+  shth: 'ষ্ঠ',
   shN: 'ষ্ণ',
   shp: 'ষ্প',
   shf: 'ষ্ফ',
   shm: 'ষ্ম',
-  sk: 'স্ক',
   skh: 'স্খ',
-  st: 'স্ত',
   sth: 'স্থ',
-  sp: 'স্প',
   sph: 'স্ফ',
-  sm: 'স্ম',
-  sn: 'স্ন',
-  sl: 'স্ল',
-  nt: 'ন্ত',
   nth: 'ন্থ',
-  nd: 'ন্দ',
   ndh: 'ন্ধ',
-  nn: 'ন্ন',
-  mp: 'ম্প',
   mph: 'ম্ফ',
-  mb: 'ম্ব',
   mbh: 'ম্ভ',
-  mm: 'ম্ম',
-  ml: 'ম্ল',
-  kt: 'ক্ত',
-  bd: 'ব্দ',
   bdh: 'ব্ধ',
-  bb: 'ব্ব',
-  bl: 'ব্ল',
+  bhd: 'ব্ধ',
   ngk: 'ঙ্ক',
   ngkh: 'ঙ্খ',
   ngg: 'ঙ্গ',
   nggh: 'ঙ্ঘ',
-  tt: 'ত্ত',
   tth: 'ত্থ',
-  tn: 'ত্ন',
-  tm: 'ত্ম',
-  dd: 'দ্দ',
   ddh: 'দ্ধ',
-  db: 'দ্ব',
-  dm: 'দ্ম',
-  cc: 'চ্চ',
   cch: 'চ্ছ',
-  jj: 'জ্জ',
   jjh: 'জ্ঝ',
+  shl: 'শ্ল',
+  shn: 'শ্ন',
+  shm2: 'শ্ম',
+  shb: 'শ্ব',
+  trr: 'ত্র',
+  str: 'স্ত্র',
+  spr: 'স্প্র',
+
+  // 2-letter common conjuncts
+  kt: 'ক্ত',
+  kl: 'ক্ল',
+  kw: 'ক্ব',
+  ky: 'ক্য',
+  kr: 'ক্র',
+  gd: 'গ্দ',
+  gdh: 'গ্ধ',
+  gn: 'গ্ন',
+  gb: 'গ্ব',
+  gm: 'গ্ম',
+  gl: 'গ্ল',
+  gr: 'গ্র',
+  ghn: 'ঘ্ন',
+  ghr: 'ঘ্র',
+  ch: 'চ',
+  cc: 'চ্চ',
+  cn: 'চ্ন',
+  cb: 'চ্ব',
+  cm: 'চ্ম',
+  jj: 'জ্জ',
+  jw: 'জ্ব',
+  jb: 'জ্ব',
+  jm: 'জ্ম',
+  jr: 'জ্র',
   TT: 'ট্ট',
   DD: 'ড্ড',
+  tt: 'ত্ত',
+  tn: 'ত্ন',
+  tm: 'ত্ম',
+  tb: 'ত্ব',
+  tw: 'ত্ব',
+  ty: 'ত্য',
   tr: 'ত্র',
-  pr: 'প্র',
-  kr: 'ক্র',
-  gr: 'গ্র',
-  br: 'ব্র',
+  tl: 'ত্ল',
+  thb: 'থ্ব',
+  dg: 'দ্গ',
+  dgh: 'দ্ঘ',
+  dd: 'দ্দ',
+  db: 'দ্ব',
+  dw: 'দ্ব',
+  dm: 'দ্ম',
   dr: 'দ্র',
+  dhn: 'ধ্ন',
+  dhb: 'ধ্ব',
+  dhw: 'ধ্ব',
+  dhm: 'ধ্ম',
+  dhr: 'ধ্র',
+  nt: 'ন্ত',
+  nd: 'ন্দ',
+  nn: 'ন্ন',
+  nb: 'ন্ব',
+  nw: 'ন্ব',
+  nm: 'ন্ম',
+  ny: 'ন্য',
+  nr: 'ন্র',
+  nl: 'ন্ল',
+  ns: 'ন্স',
+  pt: 'প্ত',
+  pn: 'প্ন',
+  pp: 'প্প',
+  pb: 'প্ব',
+  pm: 'প্ম',
+  pl: 'প্ল',
+  pr: 'প্র',
+  ps: 'প্স',
+  fl: 'ফ্ল',
+  fr: 'ফ্র',
+  bd: 'ব্দ',
+  bb: 'ব্ব',
+  bj: 'ব্জ',
+  br: 'ব্র',
+  bl: 'ব্ল',
+  bhn: 'ভ্ন',
+  bhr: 'ভ্র',
+  bhl: 'ভ্ল',
+  mn: 'ম্ন',
+  mp: 'ম্প',
+  mb: 'ম্ব',
+  mm: 'ম্ম',
+  my: 'ম্য',
   mr: 'ম্র',
+  ml: 'ম্ল',
+  lk: 'ল্ক',
+  lg: 'ল্গ',
+  lT: 'ল্ট',
+  lD: 'ল্ড',
+  lp: 'ল্প',
+  lb: 'ল্ব',
+  lm: 'ল্ম',
+  ll: 'ল্ল',
+  st: 'স্ত',
+  sk: 'স্ক',
+  sp: 'স্প',
+  sm: 'স্ম',
+  sn: 'স্ন',
+  sl: 'স্ল',
+  sw: 'স্ব',
+  sb: 'স্ব',
   sr: 'স্র',
   shr: 'শ্র',
-  fr: 'ফ্র',
-  trr: 'ত্র',
+  shw: 'শ্ব',
+  shb2: 'শ্ব',
+  hl: 'হ্ল',
+  hn: 'হ্ন',
+  hN: 'হ্ণ',
+  hm: 'হ্ম',
+  hy: 'হ্য',
+  hr: 'হ্র',
+  hw: 'হ্ব',
+  hb: 'হ্ব',
 };
 
 // Consonants mapping
@@ -307,8 +530,8 @@ export function transliterateEnglishToBengali(input: string): string {
     return COMMON_BENGALI_PHONETICS[lowerTrimmed];
   }
 
-  // If the user already typed Bengali characters, preserve them
-  if (/[\u0980-\u09FF]/.test(input)) {
+  // If the input is purely Bengali characters and symbols, return as-is
+  if (/^[\u0980-\u09FF\s\d\p{P}]+$/u.test(input)) {
     return input;
   }
 
@@ -321,6 +544,15 @@ export function transliterateEnglishToBengali(input: string): string {
   while (i < len) {
     const char = text[i];
 
+    // If already a Bengali character, keep it and update consonant flag
+    if (/[\u0980-\u09FF]/.test(char)) {
+      result += char;
+      // Bengali consonants range: \u0995 to \u09B9
+      lastWasConsonant = /[\u0995-\u09B9\u09DC-\u09DF\u09CE]/.test(char);
+      i++;
+      continue;
+    }
+
     // Special signs
     if (char === ':') {
       result += 'ঃ';
@@ -331,6 +563,20 @@ export function transliterateEnglishToBengali(input: string): string {
     if (char === '^') {
       result += 'ঁ'; // Chandra-bindu
       i++;
+      lastWasConsonant = false;
+      continue;
+    }
+
+    // Explicit hasant / conjunct joiner '+' or '`' (e.g. k+k -> ক্ক, k+h -> ক্হ, r+k -> র্ক)
+    if ((char === '+' || char === '`') && lastWasConsonant) {
+      // If followed by ri/rri, let it attach as ri-kar without broken hasant
+      if (/^r?ri/i.test(text.substring(i + 1))) {
+        i++;
+        continue;
+      }
+      result += '্';
+      i++;
+      // Wait for next consonant
       lastWasConsonant = false;
       continue;
     }
@@ -383,6 +629,20 @@ export function transliterateEnglishToBengali(input: string): string {
       if (i + cLen <= len) {
         const chunk = text.substring(i, i + cLen);
         if (CONJUNCT_MAP[chunk]) {
+          // Special rule for Ri-kar (ঋ-কার 'ৃ'):
+          // If chunk ends with 'r'/'R' (e.g. kr, gr, pr, br, dr, tr, sr, mr, hr, nr, ghr, bhr)
+          // and the following character is 'i'/'I' or starts with 'ri'/'rri'
+          // (e.g. 'kri' -> 'কৃ', 'krri' -> 'কৃ', 'drishti' -> 'দৃষ্টি', 'srishti' -> 'সৃষ্টি', 'hridoy' -> 'হৃদয়')
+          // DO NOT consume as ro-fala 'ক্র'. Let the first consonant match (e.g. 'k' -> 'ক'),
+          // and the subsequent 'ri' will match as ri-kar 'ৃ' to make 'কৃ'!
+          const rest = text.substring(i + cLen);
+          if (
+            (chunk.endsWith('r') || chunk.endsWith('R')) &&
+            (/^[iI]/.test(rest) || /^rri/i.test(rest))
+          ) {
+            continue;
+          }
+
           result += CONJUNCT_MAP[chunk];
           i += cLen;
           lastWasConsonant = true;
@@ -458,7 +718,26 @@ export function getPhoneticSuggestions(input: string): string[] {
   const set = new Set<string>();
   if (directTranslit) set.add(directTranslit);
 
-  // Match in common dictionary
+  // Exact & prefix matching in common dictionary first
+  if (COMMON_BENGALI_PHONETICS[clean]) {
+    set.add(COMMON_BENGALI_PHONETICS[clean]);
+  }
+
+  // Provide dual options for ri-kar (কৃ) vs ro-fala (ক্রি)
+  if (directTranslit.includes('কৃ')) {
+    set.add(directTranslit.replace(/কৃ/g, 'ক্রি'));
+  } else if (directTranslit.includes('ক্রি')) {
+    set.add(directTranslit.replace(/ক্রি/g, 'কৃ'));
+  }
+
+  // Dual options for initial Ri (ঋ vs রি)
+  if (directTranslit.startsWith('ঋ')) {
+    set.add('রি' + directTranslit.slice(1));
+  } else if (directTranslit.startsWith('রি')) {
+    set.add('ঋ' + directTranslit.slice(2));
+  }
+
+  // Match other common words
   Object.keys(COMMON_BENGALI_PHONETICS).forEach((key) => {
     if (key.startsWith(clean) || clean.startsWith(key)) {
       set.add(COMMON_BENGALI_PHONETICS[key]);

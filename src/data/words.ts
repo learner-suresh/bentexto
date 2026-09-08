@@ -329,5 +329,18 @@ export const VOCABULARY: VocabularyEntry[] = [
   { word: 'রাত', translit: 'raat', meaningEn: 'Night', category: 'time', tags: ['night', 'dark', 'moon', 'stars', 'sleep', 'quiet'] },
   { word: 'সকাল', translit: 'shokal', meaningEn: 'Morning', category: 'time', tags: ['morning', 'sunrise', 'start', 'breakfast', 'tea', 'fresh'] },
   { word: 'সন্ধ্যা', translit: 'shondha', meaningEn: 'Evening / Twilight', category: 'time', tags: ['evening', 'sunset', 'night', 'birds', 'peace', 'lamp'] },
-  { word: 'বছর', translit: 'bochor', meaningEn: 'Year', category: 'time', tags: ['year', 'months', 'calendar', 'time', 'seasons', 'new year'] }
+  { word: 'বছর', translit: 'bochor', meaningEn: 'Year', category: 'time', tags: ['year', 'months', 'calendar', 'time', 'seasons', 'new year'] },
+
+  // Vocalic R / Ri-kar (ঋ, ৃ) enriched vocabulary
+  { word: 'কৃষি', translit: 'krishi', meaningEn: 'Agriculture / Farming', category: 'nature', tags: ['farm', 'crops', 'soil', 'farmer', 'green', 'village', 'food'] },
+  { word: 'কৃষক', translit: 'krishok', meaningEn: 'Farmer', category: 'social', tags: ['farmer', 'agriculture', 'food', 'crops', 'village', 'field', 'hardwork'] },
+  { word: 'প্রকৃতি', translit: 'prokriti', meaningEn: 'Nature', category: 'nature', tags: ['nature', 'earth', 'trees', 'sky', 'green', 'weather', 'beauty'] },
+  { word: 'পৃথিবী', translit: 'prithibi', meaningEn: 'Earth / World', category: 'nature', tags: ['earth', 'planet', 'world', 'life', 'soil', 'globe', 'nature'] },
+  { word: 'সৃষ্টি', translit: 'srishti', meaningEn: 'Creation / Universe', category: 'abstract', tags: ['creation', 'art', 'nature', 'life', 'origin', 'beauty', 'make'] },
+  { word: 'দৃষ্টি', translit: 'drishti', meaningEn: 'Sight / Vision / View', category: 'body', tags: ['sight', 'vision', 'eyes', 'look', 'perspective', 'view'] },
+  { word: 'স্মৃতি', translit: 'smriti', meaningEn: 'Memory / Reminiscence', category: 'emotions', tags: ['memory', 'past', 'mind', 'heart', 'remember', 'nostalgia'] },
+  { word: 'তৃষ্ণা', translit: 'trishna', meaningEn: 'Thirst / Longing', category: 'body', tags: ['thirst', 'water', 'desire', 'throat', 'summer', 'drink'] },
+  { word: 'গৃহ', translit: 'griho', meaningEn: 'Home / House', category: 'household', tags: ['home', 'house', 'family', 'shelter', 'room', 'peace'] },
+  { word: 'মৃত্যু', translit: 'mrityu', meaningEn: 'Death / Mortality', category: 'abstract', tags: ['death', 'life', 'end', 'peace', 'time', 'mortal'] },
+  { word: 'অমৃত', translit: 'amrito', meaningEn: 'Nectar / Elixir', category: 'abstract', tags: ['nectar', 'sweet', 'immortal', 'divine', 'pure', 'honey'] }
 ];

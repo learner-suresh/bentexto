@@ -21,6 +21,7 @@ import { PreviousGamesModal } from './PreviousGamesModal';
 import { LanguageModal } from './LanguageModal';
 import { HowToPlayModal } from './HowToPlayModal';
 import { LegalModal } from './LegalModal';
+import { AboutModal } from './AboutModal';
 import { Logo } from './Logo';
 import { AdBanner } from './AdBanner';
 import { SideAdBanner } from './SideAdBanner';
@@ -53,8 +54,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isFaqOpen, setIsFaqOpen] = useState(false);
   const [isLegalOpen, setIsLegalOpen] = useState(false);
-  const [legalTab, setLegalTab] = useState<'privacy' | 'terms'>('privacy');
-  const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [legalTab, setLegalTab] = useState<'privacy' | 'terms' | 'contact'>('privacy');
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
+  const [isAboutAccordionOpen, setIsAboutAccordionOpen] = useState(false);
 
   const handleToggleTheme = () => {
     const root = document.documentElement;
@@ -106,9 +108,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </p>
           </div>
 
-          {/* User-Friendly Quick Feature Pills & Live Daily Counter */}
+          {/* User-Friendly Quick Feature Pills & Live Real-Time Counter */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-5 text-[11px] text-gray-300">
-            <DailyUserCounterBadge variant="inline" />
+            <DailyUserCounterBadge variant="inline" showModalOnClick={true} />
             <span className="inline-flex items-center gap-1 rounded-full bg-[#15213B] border border-[#253556] px-2.5 py-1">
               <Keyboard className="h-3 w-3 text-[#0095FF]" /> Type "bristi" → "বৃষ্টি"
             </span>
@@ -259,9 +261,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="w-full rounded-xl border border-[#253556] bg-[#15213B]/50 overflow-hidden text-left mt-1">
               <button
                 type="button"
-                onClick={() => setIsAboutOpen(!isAboutOpen)}
+                onClick={() => setIsAboutAccordionOpen(!isAboutAccordionOpen)}
                 className="w-full flex items-center justify-between p-3 text-xs font-semibold text-gray-300 hover:text-white transition cursor-pointer"
-                aria-expanded={isAboutOpen}
+                aria-expanded={isAboutAccordionOpen}
               >
                 <span className="flex items-center gap-2">
                   <BookOpen className="h-3.5 w-3.5 text-[#38BDF8]" />
@@ -269,12 +271,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </span>
                 <ChevronDown
                   className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
-                    isAboutOpen ? 'rotate-180 text-[#38BDF8]' : ''
+                    isAboutAccordionOpen ? 'rotate-180 text-[#38BDF8]' : ''
                   }`}
                 />
               </button>
 
-              {isAboutOpen && (
+              {isAboutAccordionOpen && (
                 <div className="p-3.5 pt-1 text-[11px] sm:text-xs text-gray-400 leading-relaxed border-t border-[#253556]/60 space-y-2.5">
                   <p>
                     <strong className="text-white">Bentexto</strong> is the premier <strong className="text-[#38BDF8]">Bengali Contexto</strong> and <strong className="text-[#38BDF8]">Bengali word guessing game</strong> (বাংলা কনটেক্সটো ও শব্দ মেলানোর খেলা). Inspired by viral contextual word games like Contexto and Wordle, Bentexto challenges you to uncover a secret Bengali word using artificial intelligence semantic proximity rankings.
@@ -288,19 +290,36 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       <li>Enjoy a fresh <strong>Daily Puzzle</strong> every day at midnight or switch to <strong>Unlimited Practice</strong> mode anytime.</li>
                     </ul>
                   </div>
+                  <div className="pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setIsAboutModalOpen(true)}
+                      className="text-[#38BDF8] hover:underline font-semibold"
+                    >
+                      Read full editorial mission & technology overview →
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Legal Links Footer */}
-            <div className="flex items-center gap-4 pt-2 text-xs text-gray-400 font-normal">
+            {/* Legal Links & Policy Footer (AdSense Compliant) */}
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2.5 text-xs text-gray-400 font-normal">
+              <button
+                type="button"
+                onClick={() => setIsAboutModalOpen(true)}
+                className="hover:text-gray-200 hover:underline cursor-pointer"
+              >
+                About Us
+              </button>
+              <span>•</span>
               <button
                 type="button"
                 onClick={() => {
                   setLegalTab('privacy');
                   setIsLegalOpen(true);
                 }}
-                className="hover:text-gray-300 hover:underline cursor-pointer"
+                className="hover:text-gray-200 hover:underline cursor-pointer"
               >
                 Privacy Policy
               </button>
@@ -311,9 +330,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   setLegalTab('terms');
                   setIsLegalOpen(true);
                 }}
-                className="hover:text-gray-300 hover:underline cursor-pointer"
+                className="hover:text-gray-200 hover:underline cursor-pointer"
               >
                 Terms of Service
+              </button>
+              <span>•</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setLegalTab('contact');
+                  setIsLegalOpen(true);
+                }}
+                className="hover:text-gray-200 hover:underline cursor-pointer"
+              >
+                Contact
               </button>
             </div>
           </div>
@@ -340,6 +370,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       )}
 
       {/* Modals */}
+      <AboutModal
+        isOpen={isAboutModalOpen}
+        onClose={() => setIsAboutModalOpen(false)}
+        onOpenLegal={(tab) => {
+          setLegalTab(tab);
+          setIsLegalOpen(true);
+        }}
+        onOpenFeedback={() => setIsFeedbackOpen(true)}
+      />
+
       <LegalModal
         isOpen={isLegalOpen}
         onClose={() => setIsLegalOpen(false)}
