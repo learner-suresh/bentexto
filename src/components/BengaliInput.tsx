@@ -154,9 +154,9 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
 
       {/* Main Input Form Bar */}
       <form onSubmit={handleSubmit} className="relative">
-        <div className="flex items-center gap-2 rounded-xl border border-[#253556] bg-[#15213B] p-2 shadow-md transition focus-within:border-[#0095FF] focus-within:ring-2 focus-within:ring-[#0095FF]/20">
+        <div className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-[#253556] bg-[#15213B] p-1.5 sm:p-2 shadow-md transition focus-within:border-[#0095FF] focus-within:ring-2 focus-within:ring-[#0095FF]/20">
           {/* Main Text Input */}
-          <div className="relative flex-1">
+          <div className="relative flex-1 min-w-0">
             <input
               ref={inputRef}
               id="word-guess-input"
@@ -166,13 +166,13 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
               onChange={(e) => setRawInput(e.target.value)}
               placeholder={
                 inputMode === 'phonetic'
-                  ? "Type a word in English or Bengali (e.g. bristi, pani)..."
+                  ? "Type word (e.g. bristi, pani)..."
                   : "সরাসরি বাংলায় লিখুন..."
               }
               autoComplete="off"
               autoCorrect="off"
               spellCheck="false"
-              className="w-full bg-transparent px-2.5 py-1.5 text-base font-medium text-white placeholder:text-gray-400 focus:outline-none"
+              className="w-full bg-transparent px-2 sm:px-2.5 py-1.5 text-sm sm:text-base font-medium text-white placeholder:text-gray-400 focus:outline-none"
             />
           </div>
 
@@ -183,7 +183,7 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
             onClick={() => setShowVirtualKeyboard((prev) => !prev)}
             title="অন-স্ক্রিন বাংলা কিবোর্ড"
             aria-label="Virtual keyboard"
-            className={`rounded-lg p-2 transition cursor-pointer border ${
+            className={`rounded-lg p-1.5 sm:p-2 transition cursor-pointer border shrink-0 ${
               showVirtualKeyboard
                 ? 'bg-[#0095FF]/20 text-[#38BDF8] border-[#0095FF]/40'
                 : 'border-transparent text-gray-400 hover:text-white hover:bg-[#1E2C4A]'
@@ -198,10 +198,10 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
             id="input-mode-toggle"
             onClick={() => setInputMode((prev) => (prev === 'phonetic' ? 'direct' : 'phonetic'))}
             title={inputMode === 'phonetic' ? 'Switch to Direct Bengali' : 'Switch to Phonetic Typing'}
-            className="flex items-center gap-1.5 rounded-lg border border-[#253556] bg-[#0D1527] px-2.5 py-1.5 text-xs font-semibold text-gray-300 hover:text-white hover:border-gray-500 transition cursor-pointer"
+            className="flex items-center gap-1 sm:gap-1.5 rounded-lg border border-[#253556] bg-[#0D1527] px-2 sm:px-2.5 py-1.5 text-xs font-semibold text-gray-300 hover:text-white hover:border-gray-500 transition cursor-pointer shrink-0"
           >
             <Languages className="h-3.5 w-3.5 text-[#0095FF]" />
-            <span className="hidden sm:inline">
+            <span className="hidden xs:inline sm:inline">
               {inputMode === 'phonetic' ? 'Phonetic' : 'বাংলা'}
             </span>
           </button>
@@ -211,10 +211,10 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
             type="submit"
             id="submit-guess-btn"
             disabled={disabled || !rawInput.trim()}
-            className="flex h-10 items-center justify-center gap-1.5 rounded-lg bg-[#0095FF] px-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-[#0082E6] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+            className="flex h-9 sm:h-10 items-center justify-center gap-1 sm:gap-1.5 rounded-lg bg-[#0095FF] px-2.5 sm:px-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-[#0082E6] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer shrink-0"
           >
             <span>Guess</span>
-            <CornerDownLeft className="h-3.5 w-3.5" />
+            <CornerDownLeft className="h-3.5 w-3.5 hidden xs:inline" />
           </button>
         </div>
       </form>

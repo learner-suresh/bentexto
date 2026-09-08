@@ -142,12 +142,30 @@
     <!-- Main Application Root (React mounts here cleanly) -->
     <div id="root"></div>
 
-    <!-- Semantic Crawl & Static SEO Content for Search Engines and Fallback -->
+    <!-- Crawlable Semantic SEO Content for Search Engine Bots & Fallback -->
+    <section class="sr-only" aria-label="About Bentexto Bengali Word Game">
+      <h1>Bentexto — Bengali Contexto &amp; Daily Bengali Word Guessing Game (বাংলা কনটেক্সটো)</h1>
+      <p>
+        Bentexto (বেনটেক্সটো) is the official Bengali semantic word guessing game inspired by Contexto and Wordle. Every day, players try to uncover a secret target Bengali word (আজকের গোপন বাংলা শব্দ) using semantic artificial intelligence proximity ranking.
+      </p>
+      <h2>How to Play Bengali Contexto (বাংলা কনটেক্সটো খেলার নিয়ম)</h2>
+      <ul>
+        <li>Type any Bengali word or write phonetically in English (e.g., typing &quot;bristi&quot; suggests &quot;বৃষ্টি&quot;, &quot;jol&quot; suggests &quot;জল&quot;).</li>
+        <li>The secret word is ranked #1. Words conceptually or contextually closer have lower rank numbers and glow green.</li>
+        <li>Enjoy unlimited guesses every single day with daily streak counters and infinite randomized practice games.</li>
+      </ul>
+      <h2>Features of Bentexto</h2>
+      <p>
+        Includes phonetic English-to-Bangla auto-transliteration, interactive Bengali virtual keyboard, detailed hints, daily archives, dark and light theme support, and zero sign-up requirements.
+      </p>
+    </section>
+
+    <!-- Fallback for JavaScript Disabled Browsers -->
     <noscript>
       <div style="background-color: #15213B; border: 1px solid #253556; border-radius: 8px; padding: 20px; margin: 20px auto; max-width: 650px; text-align: center; color: #F8FAFC;">
-        <h1 style="font-size: 22px; color: #0095FF; margin-bottom: 8px;">Bentexto — Bengali Contexto &amp; Word Guessing Game</h1>
+        <h2 style="font-size: 20px; color: #0095FF; margin-bottom: 8px;">Bentexto — Bengali Contexto &amp; Word Guessing Game</h2>
         <p style="color: #94A3B8; font-size: 14px; margin-top: 8px; line-height: 1.6;">
-          প্রতিদিনের বাংলা কনটেক্সটো ও শব্দ মেলানোর খেলা। JavaScript is required to play the interactive daily Bengali word guessing game. Please enable JavaScript to play.
+          প্রতিদিনের বাংলা কনটেক্সটো ও শব্দ মেলানোর খেলা। JavaScript is required to play the interactive daily Bengali word guessing game. Please enable JavaScript in your browser to play.
         </p>
       </div>
     </noscript>

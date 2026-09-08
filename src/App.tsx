@@ -47,10 +47,24 @@ export default function App() {
   // Day and Date tracking
   const [dayNumber, setDayNumber] = useState<number>(getTodayDayNumber());
   const [dateKey, setDateKey] = useState<string>(getTodayDateKey());
-  const [isPractice, setIsPractice] = useState<boolean>(false);
+  const [isPractice, setIsPractice] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('bentexto_active_mode') === 'practice';
+    } catch {
+      return false;
+    }
+  });
 
   // Secret Word & Precomputed Ranking Map
-  const [secretWord, setSecretWord] = useState<BengaliWord>(() => getDailySecretWord(getTodayDayNumber()));
+  const [secretWord, setSecretWord] = useState<BengaliWord>(() => {
+    try {
+      const isSavedPractice = localStorage.getItem('bentexto_active_mode') === 'practice';
+      if (isSavedPractice) {
+        return getPracticeSecretWord();
+      }
+    } catch {}
+    return getDailySecretWord(getTodayDayNumber());
+  });
   const [rankMap, setRankMap] = useState(() => getPrecomputedRankings(secretWord));
 
   // Game state
@@ -127,7 +141,12 @@ export default function App() {
 
   // Load saved daily game state
   useEffect(() => {
-    if (isPractice) return;
+    if (isPractice) {
+      // In practice/unlimited mode, ensure daily completion modals are closed
+      setIsVictoryOpen(false);
+      setIsSurrenderOpen(false);
+      return;
+    }
 
     try {
       const storageKey = `bentexto_day_${dateKey}`;
@@ -234,31 +253,31 @@ export default function App() {
 
   // Switch to Practice Mode / Next Practice Word
   const handleTogglePractice = () => {
-    if (!isPractice) {
-      // Switching to practice
-      setIsPractice(true);
-      const newSecret = getPracticeSecretWord(secretWord.id);
-      setSecretWord(newSecret);
-      setGuesses([]);
-      setIsSolved(false);
-      setSurrendered(false);
-      setHintsUsed(0);
-      setHintMessage(null);
-    } else {
-      // Pick another practice word
-      const newSecret = getPracticeSecretWord(secretWord.id);
-      setSecretWord(newSecret);
-      setGuesses([]);
-      setIsSolved(false);
-      setSurrendered(false);
-      setHintsUsed(0);
-      setHintMessage(null);
-    }
+    setIsVictoryOpen(false);
+    setIsSurrenderOpen(false);
+    setIsPractice(true);
+    try {
+      localStorage.setItem('bentexto_active_mode', 'practice');
+    } catch {}
+
+    const newSecret = getPracticeSecretWord(secretWord.id);
+    setSecretWord(newSecret);
+    setGuesses([]);
+    setIsSolved(false);
+    setSurrendered(false);
+    setHintsUsed(0);
+    setHintMessage(null);
   };
 
   // Switch back to Daily mode
   const handleReturnToDaily = () => {
+    setIsVictoryOpen(false);
+    setIsSurrenderOpen(false);
     setIsPractice(false);
+    try {
+      localStorage.setItem('bentexto_active_mode', 'daily');
+    } catch {}
+
     const dailyWord = getDailySecretWord(dayNumber);
     setSecretWord(dailyWord);
 
@@ -324,10 +343,16 @@ export default function App() {
 
   // Launch Daily game from landing page or day picker
   const handlePlayDaily = (selectedDayNum?: number, selectedDate?: string) => {
+    setIsVictoryOpen(false);
+    setIsSurrenderOpen(false);
     const targetDay = selectedDayNum || getTodayDayNumber();
     const targetDateKey = selectedDate || getTodayDateKey();
 
     setIsPractice(false);
+    try {
+      localStorage.setItem('bentexto_active_mode', 'daily');
+    } catch {}
+
     setDayNumber(targetDay);
     setDateKey(targetDateKey);
     setSecretWord(getDailySecretWord(targetDay));
@@ -360,7 +385,13 @@ export default function App() {
 
   // Launch Unlimited / Practice mode from landing page
   const handlePlayUnlimited = () => {
+    setIsVictoryOpen(false);
+    setIsSurrenderOpen(false);
     setIsPractice(true);
+    try {
+      localStorage.setItem('bentexto_active_mode', 'practice');
+    } catch {}
+
     const newWord = getPracticeSecretWord(secretWord.id);
     setSecretWord(newWord);
     setGuesses([]);

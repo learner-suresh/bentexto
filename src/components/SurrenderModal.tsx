@@ -25,8 +25,8 @@ export const SurrenderModal: React.FC<SurrenderModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs animate-fade-in">
-      <div className="relative w-full max-w-md rounded-2xl border border-[#253556] bg-[#15213B] p-6 shadow-2xl text-center text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 sm:p-4 backdrop-blur-xs animate-fade-in overflow-y-auto">
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-[#253556] bg-[#15213B] p-4 sm:p-6 shadow-2xl text-center text-white">
         {/* Close */}
         <button
           onClick={onClose}

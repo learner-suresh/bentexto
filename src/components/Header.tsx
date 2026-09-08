@@ -159,7 +159,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={onOpenStats}
           title="পরিসংখ্যান (Statistics)"
           aria-label="View Game Statistics"
-          className="p-2 rounded-lg bg-[#15213B] border border-[#253556] text-gray-300 hover:text-white hover:border-[#0095FF] transition cursor-pointer"
+          className="p-1.5 sm:p-2 rounded-lg bg-[#15213B] border border-[#253556] text-gray-300 hover:text-white hover:border-[#0095FF] transition cursor-pointer"
         >
           <BarChart2 className="h-4 w-4" />
         </button>
@@ -171,7 +171,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={onOpenHelp}
           title="কীভাবে খেলবেন? (How to play)"
           aria-label="How to play instructions"
-          className="p-2 rounded-lg bg-[#15213B] border border-[#253556] text-gray-300 hover:text-white hover:border-[#0095FF] transition cursor-pointer"
+          className="p-1.5 sm:p-2 rounded-lg bg-[#15213B] border border-[#253556] text-gray-300 hover:text-white hover:border-[#0095FF] transition cursor-pointer hidden xs:inline-flex"
         >
           <HelpCircle className="h-4 w-4" />
         </button>
@@ -183,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
             id="header-menu-dropdown-btn"
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label="More options"
-            className={`p-2 rounded-lg bg-[#15213B] border transition cursor-pointer ${
+            className={`p-1.5 sm:p-2 rounded-lg bg-[#15213B] border transition cursor-pointer ${
               menuOpen
                 ? 'border-[#0095FF] text-white'
                 : 'border-[#253556] text-gray-300 hover:text-white hover:border-gray-500'
@@ -208,6 +208,19 @@ export const Header: React.FC<HeaderProps> = ({
                   <span>Previous games (অতীত খেলা)</span>
                 </button>
               )}
+
+              {/* How to Play */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onOpenHelp();
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-200 hover:bg-[#1E2C4A] hover:text-white transition text-left cursor-pointer"
+              >
+                <HelpCircle className="h-4 w-4 text-[#0095FF]" />
+                <span>How to play (কীভাবে খেলবেন)</span>
+              </button>
 
               {/* Mode Toggle (Daily / Unlimited) */}
               <button
