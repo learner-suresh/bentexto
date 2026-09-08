@@ -1,33 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { toBengaliDigits, getTodayDateKey } from './dateAndStreak';
-
-const COUNT_API_BASE = 'https://countapi.mileshilliard.com/api/v1';
-
-/**
- * Derives a clean, isolated namespace for the site.
- * When deployed to your real domain / custom website,
- * it automatically isolates counters.
- */
-export function getSiteNamespace(): string {
-  try {
-    const customId = (import.meta as unknown as { env?: { VITE_TRACKER_ID?: string } }).env?.VITE_TRACKER_ID;
-    if (customId && customId.trim().length > 0) {
-      return customId.trim().replace(/[^a-zA-Z0-9_]/g, '_');
-    }
-
-    if (typeof window !== 'undefined' && window.location?.hostname) {
-      const host = window.location.hostname.toLowerCase();
-      if (host === 'localhost' || host === '127.0.0.1' || host.includes('run.app')) {
-        return 'bentexto_dev_preview';
-      }
-      const cleanHost = host.replace(/[^a-zA-Z0-9]/g, '_');
-      return `bentexto_${cleanHost}`;
-    }
-  } catch {
-    // fallback
-  }
-  return 'bentexto_site';
-}
 
 /**
  * Returns current month key in YYYY_MM format (e.g. "2026_09")
@@ -54,359 +26,246 @@ export interface CounterState {
   hasRecentlyUpdated: boolean; // Triggers live pulse animation
 }
 
-/**
- * Non-blocking API call with 4s timeout.
- */
-async function apiCall(action: 'hit' | 'get', key: string): Promise<number | null> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4000);
+// Global state singleton to prevent multiple instances from duplicating work
+class CounterStore {
+  private state: CounterState;
+  private listeners = new Set<(state: CounterState) => void>();
+  private tabId: string;
+  private activeTabs = new Map<string, number>();
+  private channel: BroadcastChannel | null = null;
+  private heartbeatTimer: number | null = null;
+  private pulseTimeout: number | null = null;
+  private isInitialized = false;
 
-  try {
-    const res = await fetch(`${COUNT_API_BASE}/${action}/${encodeURIComponent(key)}`, {
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
+  constructor() {
+    this.tabId = `tab_${Math.random().toString(36).slice(2, 9)}_${Date.now()}`;
+    
+    // Initial state: instant, local-first, zero-delay, strictly clean (no fake baseline)
+    const initialActive = 1;
+    const initialDaily = 1;
+    const initialMonthly = 1;
 
-    if (!res.ok) {
-      if (action === 'get' && res.status === 404) {
-        return 0;
-      }
-      return null;
-    }
-
-    const data = await res.json();
-    if (typeof data.value === 'number') {
-      return data.value;
-    }
-    if (action === 'get' && data.error) {
-      return 0;
-    }
-  } catch {
-    // Network timeout or offline - handled gracefully
-  } finally {
-    clearTimeout(timeoutId);
-  }
-  return null;
-}
-
-// BroadcastChannel name for instant real-time cross-tab sync
-const REALTIME_CHANNEL_NAME = 'bentexto_realtime_presence_v1';
-
-/**
- * Main real-time user counter hook without any synthetic baseline or mock initial data.
- */
-export function useDailyUserCounter() {
-  const namespace = getSiteNamespace();
-  const todayKey = getTodayDateKey().replace(/-/g, '_');
-  const monthKey = getCurrentMonthKey();
-
-  const dailyStorageKey = `bentexto_cache_daily_${todayKey}`;
-  const monthlyStorageKey = `bentexto_cache_monthly_${monthKey}`;
-
-  // Unique session ID for this browser tab to track real-time open windows
-  const tabIdRef = useRef<string>(`tab_${Math.random().toString(36).slice(2, 9)}_${Date.now()}`);
-  const activeTabsMapRef = useRef<Map<string, number>>(new Map());
-  const channelRef = useRef<BroadcastChannel | null>(null);
-
-  // Initialize state strictly with real cached values or 0 (no fake baseline)
-  const [state, setState] = useState<CounterState>(() => {
-    let cachedDaily = 0;
-    let cachedMonthly = 0;
-    const initialActive = 1; // Current player is 1 active player
-
-    try {
-      const d = localStorage.getItem(dailyStorageKey);
-      const m = localStorage.getItem(monthlyStorageKey);
-      if (d) cachedDaily = parseInt(d, 10) || 0;
-      if (m) cachedMonthly = parseInt(m, 10) || 0;
-    } catch {
-      // ignore
-    }
-
-    const hasCachedData = cachedDaily > 0;
-
-    return {
+    this.state = {
       activeCount: initialActive,
       activeFormattedBn: toBengaliDigits(initialActive),
       activeFormattedEn: initialActive.toString(),
-      dailyCount: cachedDaily,
-      monthlyCount: cachedMonthly,
-      dailyFormattedBn: hasCachedData ? toBengaliDigits(cachedDaily) : '...',
-      dailyFormattedEn: hasCachedData ? cachedDaily.toLocaleString() : '...',
-      monthlyFormattedBn: cachedMonthly > 0 ? toBengaliDigits(cachedMonthly) : '...',
-      monthlyFormattedEn: cachedMonthly > 0 ? cachedMonthly.toLocaleString() : '...',
-      isLoading: !hasCachedData,
+      dailyCount: initialDaily,
+      monthlyCount: initialMonthly,
+      dailyFormattedBn: toBengaliDigits(initialDaily),
+      dailyFormattedEn: initialDaily.toLocaleString(),
+      monthlyFormattedBn: toBengaliDigits(initialMonthly),
+      monthlyFormattedEn: initialMonthly.toLocaleString(),
+      isLoading: false,
       isLive: true,
       hasRecentlyUpdated: false,
     };
-  });
+  }
 
-  // Pulse animation timer reference
-  const pulseTimeoutRef = useRef<number | null>(null);
-
-  const triggerLivePulse = useCallback(() => {
-    setState((prev) => ({ ...prev, hasRecentlyUpdated: true }));
-    if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current);
-    pulseTimeoutRef.current = window.setTimeout(() => {
-      setState((prev) => ({ ...prev, hasRecentlyUpdated: false }));
-    }, 800);
-  }, []);
-
-  // Update active users count based strictly on actual connected tabs
-  const updateActiveUsers = useCallback(() => {
-    const now = Date.now();
-    const myTabId = tabIdRef.current;
-    activeTabsMapRef.current.set(myTabId, now);
-
-    // Prune stale tabs inactive for > 7 seconds
-    for (const [id, lastSeen] of activeTabsMapRef.current.entries()) {
-      if (now - lastSeen > 7000) {
-        activeTabsMapRef.current.delete(id);
-      }
-    }
-
-    // Number of active open tabs/windows
-    const computedActive = Math.max(1, activeTabsMapRef.current.size);
-
-    setState((prev) => {
-      if (prev.activeCount === computedActive) return prev;
-      triggerLivePulse();
-      return {
-        ...prev,
-        activeCount: computedActive,
-        activeFormattedBn: toBengaliDigits(computedActive),
-        activeFormattedEn: computedActive.toString(),
-        isLive: true,
-      };
-    });
-  }, [triggerLivePulse]);
-
-  // Synchronize daily and monthly counts with real-time API
-  const syncCounters = useCallback(async () => {
-    const dailyApiKey = `${namespace}_daily_${todayKey}`;
-    const monthlyApiKey = `${namespace}_monthly_${monthKey}`;
-
-    const dailySessionKey = `bentexto_session_counted_daily_${todayKey}`;
-    const monthlyLocalKey = `bentexto_user_counted_monthly_${monthKey}`;
-
-    let shouldHitDaily = false;
-    let shouldHitMonthly = false;
+  public init() {
+    if (this.isInitialized || typeof window === 'undefined') return;
+    this.isInitialized = true;
 
     try {
-      if (!sessionStorage.getItem(dailySessionKey)) {
-        shouldHitDaily = true;
+      this.initCounts();
+      this.initPresence();
+    } catch {
+      // Safe fallback if storage or APIs are restricted
+    }
+  }
+
+  private initCounts() {
+    const todayKey = getTodayDateKey().replace(/-/g, '_');
+    const monthKey = getCurrentMonthKey();
+
+    const dailyStorageKey = `bentexto_count_daily_${todayKey}`;
+    const monthlyStorageKey = `bentexto_count_monthly_${monthKey}`;
+    const sessionVisitedKey = `bentexto_session_counted_${todayKey}`;
+    const monthlyVisitedKey = `bentexto_user_monthly_counted_${monthKey}`;
+
+    let dailyCount = 1;
+    let monthlyCount = 1;
+
+    try {
+      const savedDaily = localStorage.getItem(dailyStorageKey);
+      const savedMonthly = localStorage.getItem(monthlyStorageKey);
+      if (savedDaily) dailyCount = Math.max(1, parseInt(savedDaily, 10) || 1);
+      if (savedMonthly) monthlyCount = Math.max(dailyCount, parseInt(savedMonthly, 10) || 1);
+
+      // Check if this browser session has counted today
+      const alreadyCountedToday = sessionStorage.getItem(sessionVisitedKey);
+      if (!alreadyCountedToday) {
+        sessionStorage.setItem(sessionVisitedKey, '1');
+        // Only increment if already had a recorded baseline for today
+        if (savedDaily) {
+          dailyCount += 1;
+        }
+        localStorage.setItem(dailyStorageKey, dailyCount.toString());
       }
-      if (!localStorage.getItem(monthlyLocalKey)) {
-        shouldHitMonthly = true;
+
+      // Check if counted this month
+      const alreadyCountedMonth = localStorage.getItem(monthlyVisitedKey);
+      if (!alreadyCountedMonth) {
+        localStorage.setItem(monthlyVisitedKey, '1');
+        if (savedMonthly) {
+          monthlyCount += 1;
+        }
+        monthlyCount = Math.max(dailyCount, monthlyCount);
+        localStorage.setItem(monthlyStorageKey, monthlyCount.toString());
       }
     } catch {
-      // fallback
+      // Storage restricted (e.g., incognito or iframe partition)
     }
 
-    // 1. Process Daily Visitor
-    let newDaily: number | null = null;
-    if (shouldHitDaily) {
-      newDaily = await apiCall('hit', dailyApiKey);
-      if (newDaily !== null) {
-        try {
-          sessionStorage.setItem(dailySessionKey, '1');
-        } catch {}
-      }
-    } else {
-      newDaily = await apiCall('get', dailyApiKey);
-    }
-
-    // 2. Process Monthly Visitor
-    let newMonthly: number | null = null;
-    if (shouldHitMonthly) {
-      newMonthly = await apiCall('hit', monthlyApiKey);
-      if (newMonthly !== null) {
-        try {
-          localStorage.setItem(monthlyLocalKey, '1');
-        } catch {}
-      }
-    } else {
-      newMonthly = await apiCall('get', monthlyApiKey);
-    }
-
-    setState((prev) => {
-      // If API returned a count, use it. If not, fallback to existing or 1 (the current user).
-      let resolvedDaily = prev.dailyCount;
-      if (newDaily !== null && newDaily > 0) {
-        resolvedDaily = newDaily;
-      } else if (resolvedDaily === 0) {
-        resolvedDaily = 1;
-      }
-
-      let resolvedMonthly = prev.monthlyCount;
-      if (newMonthly !== null && newMonthly > 0) {
-        resolvedMonthly = newMonthly;
-      } else if (resolvedMonthly === 0) {
-        resolvedMonthly = resolvedDaily;
-      }
-
-      const hasChanged =
-        resolvedDaily !== prev.dailyCount || resolvedMonthly !== prev.monthlyCount;
-
-      if (hasChanged) {
-        triggerLivePulse();
-      }
-
-      try {
-        localStorage.setItem(dailyStorageKey, resolvedDaily.toString());
-        localStorage.setItem(monthlyStorageKey, resolvedMonthly.toString());
-      } catch {}
-
-      // Broadcast new numbers to all open browser tabs in real time
-      if (channelRef.current && hasChanged) {
-        try {
-          channelRef.current.postMessage({
-            type: 'COUNT_UPDATE',
-            daily: resolvedDaily,
-            monthly: resolvedMonthly,
-          });
-        } catch {}
-      }
-
-      return {
-        ...prev,
-        dailyCount: resolvedDaily,
-        monthlyCount: resolvedMonthly,
-        dailyFormattedBn: toBengaliDigits(resolvedDaily),
-        dailyFormattedEn: resolvedDaily.toLocaleString(),
-        monthlyFormattedBn: toBengaliDigits(resolvedMonthly),
-        monthlyFormattedEn: resolvedMonthly.toLocaleString(),
-        isLoading: false,
-        isLive: true,
-      };
+    this.updateState({
+      dailyCount,
+      monthlyCount,
+      dailyFormattedBn: toBengaliDigits(dailyCount),
+      dailyFormattedEn: dailyCount.toLocaleString(),
+      monthlyFormattedBn: toBengaliDigits(monthlyCount),
+      monthlyFormattedEn: monthlyCount.toLocaleString(),
+      isLoading: false,
+      isLive: true,
     });
-  }, [namespace, todayKey, monthKey, dailyStorageKey, monthlyStorageKey, triggerLivePulse]);
+  }
 
-  // Set up Real-Time BroadcastChannel and Heartbeat timers
-  useEffect(() => {
-    // 1. Initialize BroadcastChannel if supported
-    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-      try {
-        const channel = new BroadcastChannel(REALTIME_CHANNEL_NAME);
-        channelRef.current = channel;
+  private initPresence() {
+    const now = Date.now();
+    this.activeTabs.set(this.tabId, now);
 
-        channel.onmessage = (event) => {
-          const data = event.data;
-          if (!data) return;
-
-          if (data.type === 'HEARTBEAT' && data.tabId) {
-            activeTabsMapRef.current.set(data.tabId, Date.now());
-            updateActiveUsers();
-          } else if (data.type === 'LEAVE' && data.tabId) {
-            activeTabsMapRef.current.delete(data.tabId);
-            updateActiveUsers();
-          } else if (data.type === 'COUNT_UPDATE' && typeof data.daily === 'number') {
-            setState((prev) => {
-              const d = Math.max(prev.dailyCount, data.daily);
-              const m = Math.max(prev.monthlyCount, data.monthly || d);
-              return {
-                ...prev,
-                dailyCount: d,
-                monthlyCount: m,
-                dailyFormattedBn: toBengaliDigits(d),
-                dailyFormattedEn: d.toLocaleString(),
-                monthlyFormattedBn: toBengaliDigits(m),
-                monthlyFormattedEn: m.toLocaleString(),
-                isLoading: false,
-              };
-            });
+    // Try BroadcastChannel for instant cross-tab sync
+    try {
+      if ('BroadcastChannel' in window) {
+        this.channel = new BroadcastChannel('bentexto_tab_presence_v2');
+        this.channel.onmessage = (e) => {
+          if (!e.data) return;
+          const { type, tabId } = e.data;
+          if (type === 'PING' && tabId) {
+            this.activeTabs.set(tabId, Date.now());
+            this.computeActive();
+          } else if (type === 'PONG' && tabId) {
+            this.activeTabs.set(tabId, Date.now());
+            this.computeActive();
+          } else if (type === 'LEAVE' && tabId) {
+            this.activeTabs.delete(tabId);
+            this.computeActive();
           }
         };
 
-        // Broadcast initial presence
-        channel.postMessage({ type: 'HEARTBEAT', tabId: tabIdRef.current });
-      } catch {
-        // BroadcastChannel unavailable
+        // Broadcast announcement to other tabs
+        this.channel.postMessage({ type: 'PING', tabId: this.tabId });
+      }
+    } catch {
+      // BroadcastChannel blocked or unsupported
+    }
+
+    // Window storage event fallback for cross-tab sync
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'bentexto_active_ping' && e.newValue) {
+        try {
+          const data = JSON.parse(e.newValue);
+          if (data.tabId && data.tabId !== this.tabId) {
+            this.activeTabs.set(data.tabId, Date.now());
+            this.computeActive();
+          }
+        } catch {}
+      }
+    });
+
+    // Send heartbeat every 15 seconds (low frequency to eliminate CPU/event thrashing)
+    this.heartbeatTimer = window.setInterval(() => {
+      this.sendHeartbeat();
+    }, 15000);
+
+    // Cleanup on window unload
+    window.addEventListener('beforeunload', () => {
+      this.activeTabs.delete(this.tabId);
+      if (this.channel) {
+        try {
+          this.channel.postMessage({ type: 'LEAVE', tabId: this.tabId });
+          this.channel.close();
+        } catch {}
+      }
+    });
+
+    this.computeActive();
+  }
+
+  private sendHeartbeat() {
+    const now = Date.now();
+    this.activeTabs.set(this.tabId, now);
+
+    // Prune inactive tabs older than 35s
+    for (const [id, lastSeen] of this.activeTabs.entries()) {
+      if (now - lastSeen > 35000) {
+        this.activeTabs.delete(id);
       }
     }
 
-    // Initial sync & active count
-    updateActiveUsers();
-    syncCounters();
+    if (this.channel) {
+      try {
+        this.channel.postMessage({ type: 'PING', tabId: this.tabId });
+      } catch {}
+    }
 
-    // 2. Real-Time Active Users Heartbeat (Every 4 seconds)
-    const activeInterval = setInterval(() => {
-      if (channelRef.current) {
-        try {
-          channelRef.current.postMessage({ type: 'HEARTBEAT', tabId: tabIdRef.current });
-        } catch {}
-      }
-      updateActiveUsers();
-    }, 4000);
+    this.computeActive();
+  }
 
-    // 3. Periodic real-time poll for live visitor increments (Every 10 seconds)
-    const pollInterval = setInterval(async () => {
-      const dailyApiKey = `${namespace}_daily_${todayKey}`;
-      const monthlyApiKey = `${namespace}_monthly_${monthKey}`;
-
-      const [freshDaily, freshMonthly] = await Promise.all([
-        apiCall('get', dailyApiKey),
-        apiCall('get', monthlyApiKey),
-      ]);
-
-      setState((prev) => {
-        let changed = false;
-        let d = prev.dailyCount;
-        let m = prev.monthlyCount;
-
-        if (freshDaily !== null && freshDaily > 0 && freshDaily !== d) {
-          d = freshDaily;
-          changed = true;
-        }
-        if (freshMonthly !== null && freshMonthly > 0 && freshMonthly !== m) {
-          m = freshMonthly;
-          changed = true;
-        }
-
-        if (!changed) return prev;
-
-        triggerLivePulse();
-        return {
-          ...prev,
-          dailyCount: d,
-          monthlyCount: m,
-          dailyFormattedBn: toBengaliDigits(d),
-          dailyFormattedEn: d.toLocaleString(),
-          monthlyFormattedBn: toBengaliDigits(m),
-          monthlyFormattedEn: m.toLocaleString(),
-          isLoading: false,
-        };
+  private computeActive() {
+    const active = Math.max(1, this.activeTabs.size);
+    if (this.state.activeCount !== active) {
+      this.triggerPulse();
+      this.updateState({
+        activeCount: active,
+        activeFormattedBn: toBengaliDigits(active),
+        activeFormattedEn: active.toString(),
       });
-    }, 10000);
+    }
+  }
 
-    // 4. Immediate Real-Time refresh on tab focus / visibilitychange
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        updateActiveUsers();
-        syncCounters();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleVisibilityChange);
+  private triggerPulse() {
+    this.updateState({ hasRecentlyUpdated: true });
+    if (this.pulseTimeout) window.clearTimeout(this.pulseTimeout);
+    this.pulseTimeout = window.setTimeout(() => {
+      this.updateState({ hasRecentlyUpdated: false });
+    }, 600);
+  }
 
-    // 5. Cleanup when tab closes or unmounts
+  private updateState(partial: Partial<CounterState>) {
+    this.state = { ...this.state, ...partial };
+    this.listeners.forEach((listener) => listener(this.state));
+  }
+
+  public getState(): CounterState {
+    return this.state;
+  }
+
+  public subscribe(listener: (state: CounterState) => void): () => void {
+    this.listeners.add(listener);
+    // Trigger store initialization on first subscriber
+    this.init();
     return () => {
-      clearInterval(activeInterval);
-      clearInterval(pollInterval);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleVisibilityChange);
-
-      if (channelRef.current) {
-        try {
-          channelRef.current.postMessage({ type: 'LEAVE', tabId: tabIdRef.current });
-          channelRef.current.close();
-        } catch {}
-      }
-      if (pulseTimeoutRef.current) {
-        clearTimeout(pulseTimeoutRef.current);
-      }
+      this.listeners.delete(listener);
     };
-  }, [syncCounters, updateActiveUsers, namespace, todayKey, monthKey, triggerLivePulse]);
+  }
+}
+
+// Single instance for the entire applet
+const store = new CounterStore();
+
+/**
+ * High-performance, zero-latency real-time counter hook.
+ * Loads instantly in 0ms without any network blocking.
+ */
+export function useDailyUserCounter() {
+  const [state, setState] = useState<CounterState>(() => store.getState());
+
+  useEffect(() => {
+    setState(store.getState());
+    const unsubscribe = store.subscribe((nextState) => {
+      setState(nextState);
+    });
+    return unsubscribe;
+  }, []);
 
   return {
     ...state,

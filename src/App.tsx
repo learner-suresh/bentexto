@@ -136,10 +136,14 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
 
-  // Recompute rankings whenever the secret word changes
+  // Recompute rankings only when the secret word actually changes
+  const prevWordRef = React.useRef(secretWord.word);
   useEffect(() => {
-    const computed = getPrecomputedRankings(secretWord);
-    setRankMap(computed);
+    if (prevWordRef.current !== secretWord.word) {
+      prevWordRef.current = secretWord.word;
+      const computed = getPrecomputedRankings(secretWord);
+      setRankMap(computed);
+    }
   }, [secretWord]);
 
   // Load saved daily game state
