@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Keyboard, Languages, ArrowRight, CornerDownLeft, Sparkles, X } from 'lucide-react';
+import { Keyboard, Languages, ArrowRight, CornerDownLeft, X } from 'lucide-react';
 import { transliterateEnglishToBengali, getPhoneticSuggestions } from '../utils/transliterate';
 import { VirtualKeyboard } from './VirtualKeyboard';
 
@@ -166,7 +166,7 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
               onChange={(e) => setRawInput(e.target.value)}
               placeholder={
                 inputMode === 'phonetic'
-                  ? "Type word (e.g. bristi, pani)..."
+                  ? "Type word (e.g. bristi, pani, boi)..."
                   : "সরাসরি বাংলায় লিখুন..."
               }
               autoComplete="off"
@@ -221,12 +221,19 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
 
       {/* Error / Validation Message */}
       {errorMsg && (
-        <p className="mt-2 text-center text-xs font-semibold text-rose-400 animate-fade-in">
-          {errorMsg}
-        </p>
+        <div className="mt-2 p-2 rounded-lg bg-rose-950/40 border border-rose-500/30 text-center text-xs font-semibold text-rose-300 animate-fade-in flex items-center justify-between gap-2">
+          <span className="flex-1">{errorMsg}</span>
+          <button
+            type="button"
+            onClick={() => setErrorMsg(null)}
+            className="text-rose-400 hover:text-white p-0.5"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
       )}
 
-      {/* Quick Starter Chips & Conjunct hint */}
+      {/* Quick Starter Chips */}
       {!rawInput && !errorMsg && (
         <div className="mt-2 flex flex-col items-center gap-1.5 text-xs text-gray-400">
           <div className="flex items-center justify-center flex-wrap gap-1.5">
@@ -243,7 +250,7 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
             ))}
           </div>
           <div className="text-[10px] text-gray-400 text-center">
-            💡 Tip: Type <span className="font-mono text-cyan-400">kri</span> &rarr; <span className="text-white font-semibold">কৃ</span> (e.g. <span className="font-mono text-gray-300">krishi</span> &rarr; কৃষি, <span className="font-mono text-gray-300">prokriti</span> &rarr; প্রকৃতি), <span className="font-mono text-gray-300">bristi</span> (বৃষ্টি), or use <span className="font-mono text-cyan-400">+</span> for conjuncts
+            💡 Tip: Type <span className="font-mono text-cyan-400">kri</span> &rarr; <span className="text-white font-semibold">কৃ</span>, <span className="font-mono text-gray-300">bristi</span> (বৃষ্টি), <span className="font-mono text-gray-300">pani</span> (পানি)
           </div>
         </div>
       )}

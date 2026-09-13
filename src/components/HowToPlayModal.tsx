@@ -60,7 +60,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ isOpen, onClose 
                 Type phonetically in English or directly in Bengali
               </p>
               <p className="text-gray-400 text-xs mt-0.5 leading-relaxed">
-                No Bengali keyboard needed! Type phonetically in normal English letters:
+                No Bengali keyboard needed! Type phonetically in normal English letters or use the on-screen keyboard:
               </p>
               <div className="mt-2 flex flex-wrap gap-1.5 font-mono text-xs">
                 <span className="rounded-lg border border-[#253556] bg-[#0D1527] px-2.5 py-1">
