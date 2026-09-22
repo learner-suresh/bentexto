@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete Guide to Bengali Contexto & Semantic Word Games - Bentexto (বাংলা কনটেক্সটো গাইড)</title>
+  <meta name="description" content="A comprehensive educational guide to Bengali Contexto (বাংলা কনটেক্সটো). Learn how semantic proximity, AI word embeddings, and Bengali vocabulary deduction work." />
+  <meta name="keywords" content="bengali contexto guide, how to play bentexto, bangla word game guide, semantic word puzzle bengali, বাংলা কনটেক্সটো খেলার নিয়ম, বাংলা শব্দ ধাঁধা" />
+  <link rel="canonical" href="https://bentexto.netlify.app/guide.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    :root {
+      --bg: #0D1527;
+      --card-bg: #15213B;
+      --border: #253556;
+      --accent: #0095FF;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --green: #10B981;
+      --yellow: #F59E0B;
+      --red: #EF4444;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hind Siliguri", sans-serif;
+      line-height: 1.7;
+      margin: 0;
+      padding: 24px 16px;
+    }
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    h1 {
+      color: #fff;
+      font-size: 28px;
+      margin-top: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      line-height: 1.3;
+    }
+    h2 {
+      color: var(--accent);
+      font-size: 22px;
+      margin-top: 32px;
+    }
+    h3 {
+      color: #E2E8F0;
+      font-size: 18px;
+      margin-top: 24px;
+    }
+    p, li {
+      color: var(--text-muted);
+      font-size: 15.5px;
+    }
+    strong {
+      color: #fff;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 8px 16px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(0, 149, 255, 0.15);
+      border: 1px solid rgba(0, 149, 255, 0.3);
+      color: #38BDF8;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .callout {
+      background: #0D1527;
+      border-left: 4px solid var(--accent);
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+    }
+    .rank-box {
+      display: flex;
+      gap: 12px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+    .rank-card {
+      flex: 1;
+      min-width: 200px;
+      background: #0D1527;
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 10px;
+    }
+    .rank-card.green { border-top: 3px solid var(--green); }
+    .rank-card.yellow { border-top: 3px solid var(--yellow); }
+    .rank-card.red { border-top: 3px solid var(--red); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-btn">← Back to Bentexto Game</a>
+    <br/>
+    <div class="badge">Comprehensive Educational Guide</div>
+    <h1>Complete Guide to Bengali Contexto & Semantic Word Deduction (বাংলা কনটেক্সটো গাইড)</h1>
+
+    <p>
+      Welcome to the comprehensive guide for <strong>Bentexto</strong>, the leading Bengali daily semantic word puzzle. Whether you are a lifelong native Bengali speaker or an enthusiast expanding your Bengali vocabulary, this guide explores the computational linguistics, semantic distance mechanics, and deduction strategies behind the game.
+    </p>
+
+    <div class="callout">
+      <strong>Core Principle:</strong> Unlike traditional crossword or spelling puzzles like Wordle that evaluate matching characters or anagrams, Bentexto evaluates <strong>meaning, context, and semantic associations</strong>.
+    </div>
+
+    <h2>1. What is Semantic Similarity in Language?</h2>
+    <p>
+      In computational linguistics and Natural Language Processing (NLP), semantic similarity measures how close two words or concepts are in practical human communication. Words that frequently co-occur in literature, newspapers, everyday conversations, or thematic contexts share high semantic proximity.
+    </p>
+    <p>
+      For instance, consider the secret word <strong>বৃষ্টি (Rain)</strong>:
+    </p>
+    <ul>
+      <li>Words like <strong>মেঘ (Cloud)</strong>, <strong>জল (Water)</strong>, <strong>বাদল (Monsoon)</strong>, and <strong>ছাতা (Umbrella)</strong> are contextually and semantically linked. They will receive close proximity ranks (e.g., Rank 2 to 100).</li>
+      <li>Words like <strong>নদী (River)</strong>, <strong>শীত (Winter)</strong>, or <strong>কৃষি (Agriculture)</strong> share moderate thematic overlap and will rank in the warm tier (Rank 200 to 1,000).</li>
+      <li>Completely unrelated concepts such as <strong>কম্পিউটার (Computer)</strong>, <strong>ইট (Brick)</strong>, or <strong>গণিত (Mathematics)</strong> will rank in the cold tier (Rank 2,000+).</li>
+    </ul>
+
+    <h2>2. Understanding the Rank System & Color Tiers</h2>
+    <p>
+      Every secret word in Bentexto is evaluated against a curated dictionary of thousands of common Bengali words. Here is how each guess is classified:
+    </p>
+
+    <div class="rank-box">
+      <div class="rank-card green">
+        <h3 style="color: var(--green); margin-top: 0;">Green Tier (Top 300)</h3>
+        <p><strong>Rank #1 to #300:</strong> Hot / Very Close. Your guess belongs to the exact same thematic domain or emotional family as the secret target word.</p>
+      </div>
+      <div class="rank-card yellow">
+        <h3 style="color: var(--yellow); margin-top: 0;">Yellow Tier (301 - 1,000)</h3>
+        <p><strong>Rank #301 to #1,000:</strong> Warm. You are in the right general neighborhood (e.g. nature, human body, emotion, food), but need to narrow down the focus.</p>
+      </div>
+      <div class="rank-card red">
+        <h3 style="color: var(--red); margin-top: 0;">Red Tier (1,001+)</h3>
+        <p><strong>Rank #1,001+:</strong> Cold / Distant. The concept has little to no direct correlation with today's secret word.</p>
+      </div>
+    </div>
+
+    <h2>3. Effective Strategies to Solve Bentexto Efficiently</h2>
+    <p>
+      Mastering Bentexto requires a systematic strategy rather than random guessing:
+    </p>
+
+    <h3>Step 1: The Category Sweep (উদ্বোধনী শব্দসমূহ)</h3>
+    <p>
+      Begin with a broad sweep across fundamental categories of human experience. Try one word from each major cluster:
+    </p>
+    <ul>
+      <li><strong>Nature / Weather:</strong> প্রকৃতি (nature), বৃষ্টি (rain), সূর্য (sun), নদী (river).</li>
+      <li><strong>Living Beings:</strong> মানুষ (human), পাখি (bird), গাছ (tree), পশু (animal).</li>
+      <li><strong>Emotions & Mind:</strong> সুখ (happiness), প্রেম (love), চিন্তা (thought), মন (mind).</li>
+      <li><strong>Culture & Society:</strong> বই (book), গান (music), দেশ (country), বিদ্যালয় (school).</li>
+      <li><strong>Physical Objects & Food:</strong> ঘর (house), খাবার (food), মাটি (soil), আলো (light).</li>
+    </ul>
+
+    <h3>Step 2: Follow the Warmest Lead</h3>
+    <p>
+      Check which of your opening words received the lowest rank number. If <em>প্রকৃতি</em> ranked #450 while <em>বই</em> ranked #3,200, you know immediately that today's word is closely grounded in the natural world.
+    </p>
+
+    <h3>Step 3: Branch Out with Synonyms and Associations</h3>
+    <p>
+      Once inside the Green tier (Rank &lt; 300), test synonyms, hypernyms (broader terms), and hyponyms (specific terms). For example, if <em>ফুল (flower)</em> ranks #45, test specific flowers like <em>গোলাপ (rose)</em>, <em>পদ্ম (lotus)</em>, or attributes like <em>সুগন্ধ (fragrance)</em> and <em>পাপড়ি (petal)</em>.
+    </p>
+
+    <h2>4. How to Type in Bengali Without a Bangla Keyboard</h2>
+    <p>
+      Bentexto includes an intelligent phonetic typing engine designed for accessibility. You don't need a dedicated Avro or Bijoy keyboard:
+    </p>
+    <ul>
+      <li>Type phonetically in English letters: typing <code>bristi</code> converts to <code>বৃষ্টি</code>, <code>shanti</code> converts to <code>শান্তি</code>, and <code>krishi</code> converts to <code>কৃষি</code>.</li>
+      <li>Use the on-screen Virtual Keyboard for complex conjunct characters (যুক্তাক্ষর) like ক্ত, ক্ষ, জ্ঞ, or ঞ্চ.</li>
+      <li>Click any of the suggested chips beneath the input bar to test related words instantly.</li>
+    </ul>
+
+    <h2>5. Educational Value of Daily Word Puzzles</h2>
+    <p>
+      Studies in cognitive linguistics show that daily semantic retrieval puzzles enhance associative memory, expand active vocabulary, and prevent cognitive decline. Bentexto provides schools, students, and language enthusiasts an engaging, free platform to celebrate and preserve Bengali heritage.
+    </p>
+
+    <div style="margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center;">
+      <a href="/" class="back-btn">Play Today's Secret Word Puzzle →</a>
+    </div>
+  </div>
+</body>
+</html>

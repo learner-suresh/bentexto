@@ -57,19 +57,6 @@ export const ResponsiveSideAds: React.FC<ResponsiveSideAdsProps> = ({
             data-ad-format="rectangle, horizontal"
             data-full-width-responsive="true"
           />
-          <div className="rounded-lg bg-[#0B1324] border border-dashed border-[#253556] p-2.5 flex items-center justify-between gap-2 text-xs">
-            <div className="text-left">
-              <span className="font-semibold text-gray-300 block text-[11px]">
-                Bengali Partner (Left)
-              </span>
-              <span className="text-[10px] text-gray-500 block">
-                বাংলা শব্দভাণ্ডার বিকাশ
-              </span>
-            </div>
-            <span className="inline-flex items-center gap-1 rounded bg-[#0095FF]/10 text-[#38BDF8] border border-[#0095FF]/30 px-1.5 py-0.5 text-[9px] font-bold uppercase">
-              <Sparkles className="h-2.5 w-2.5" /> Ad
-            </span>
-          </div>
         </div>
       </div>
 
@@ -89,19 +76,6 @@ export const ResponsiveSideAds: React.FC<ResponsiveSideAdsProps> = ({
             data-ad-format="rectangle, horizontal"
             data-full-width-responsive="true"
           />
-          <div className="rounded-lg bg-[#0B1324] border border-dashed border-[#253556] p-2.5 flex items-center justify-between gap-2 text-xs">
-            <div className="text-left">
-              <span className="font-semibold text-gray-300 block text-[11px]">
-                Bengali Partner (Right)
-              </span>
-              <span className="text-[10px] text-gray-500 block">
-                সিম্যান্টিক এআই ইঞ্জিন
-              </span>
-            </div>
-            <span className="inline-flex items-center gap-1 rounded bg-[#10B981]/10 text-[#34D399] border border-[#10B981]/30 px-1.5 py-0.5 text-[9px] font-bold uppercase">
-              <Sparkles className="h-2.5 w-2.5" /> Ad
-            </span>
-          </div>
         </div>
       </div>
     </div>

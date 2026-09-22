@@ -30,6 +30,7 @@ import { LegalModal } from './components/LegalModal';
 import { AboutModal } from './components/AboutModal';
 import { ConsentBanner } from './components/ConsentBanner';
 import { DailyUserCounterBadge } from './components/DailyUserCounterBadge';
+import { EducationalSection } from './components/EducationalSection';
 import {
   Sparkles,
   Lightbulb,
@@ -751,14 +752,38 @@ export default function App() {
         </div>
       )}
 
+      {/* Educational & Linguistic Content Section for Quality & AdSense Compliance */}
+      <EducationalSection />
+
       {/* Footer */}
-      <footer className="h-12 border-t border-[#253556] bg-[#0D1527] flex items-center justify-between px-4 sm:px-8 text-xs text-gray-400 font-mono">
+      <footer className="h-auto sm:h-12 py-3 sm:py-0 border-t border-[#253556] bg-[#0D1527] flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 text-xs text-gray-400 font-mono gap-2">
         <div className="flex items-center gap-2">
           <Clock className="h-3.5 w-3.5 text-gray-400" />
           <span>NEXT WORD IN:</span>
           <span className="font-bold text-[#0095FF]">{countdown}</span>
         </div>
-        <div className="hidden sm:flex items-center gap-4 text-[11px] uppercase tracking-widest text-gray-400">
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wider text-gray-400">
+          <a
+            href="/guide.html"
+            className="hover:text-white transition cursor-pointer text-[#38BDF8]"
+          >
+            Game Guide
+          </a>
+          <span>•</span>
+          <a
+            href="/vocabulary.html"
+            className="hover:text-white transition cursor-pointer text-[#38BDF8]"
+          >
+            Vocabulary
+          </a>
+          <span>•</span>
+          <a
+            href="/faq.html"
+            className="hover:text-white transition cursor-pointer text-[#38BDF8]"
+          >
+            FAQ
+          </a>
+          <span>•</span>
           <button
             onClick={() => setIsHelpOpen(true)}
             className="hover:text-white transition cursor-pointer"
@@ -802,8 +827,6 @@ export default function App() {
           >
             Contact
           </button>
-          <span>•</span>
-          <span>BENTEXTO • BENGALI WORD GAME</span>
         </div>
       </footer>
 
