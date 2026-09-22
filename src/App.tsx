@@ -791,42 +791,33 @@ export default function App() {
             How to play
           </button>
           <span>•</span>
-          <button
-            onClick={() => setIsAboutOpen(true)}
+          <a
+            href="/about.html"
             className="hover:text-white transition cursor-pointer"
           >
             About
-          </button>
+          </a>
           <span>•</span>
-          <button
-            onClick={() => {
-              setLegalTab('privacy');
-              setIsLegalOpen(true);
-            }}
+          <a
+            href="/privacy.html"
             className="hover:text-white transition cursor-pointer"
           >
             Privacy
-          </button>
+          </a>
           <span>•</span>
-          <button
-            onClick={() => {
-              setLegalTab('terms');
-              setIsLegalOpen(true);
-            }}
+          <a
+            href="/terms.html"
             className="hover:text-white transition cursor-pointer"
           >
             Terms
-          </button>
+          </a>
           <span>•</span>
-          <button
-            onClick={() => {
-              setLegalTab('contact');
-              setIsLegalOpen(true);
-            }}
+          <a
+            href="/contact.html"
             className="hover:text-white transition cursor-pointer"
           >
             Contact
-          </button>
+          </a>
         </div>
       </footer>
 
