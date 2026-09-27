@@ -7,12 +7,14 @@ interface BengaliInputProps {
   onGuess: (word: string) => void;
   disabled?: boolean;
   alreadyGuessedWords: Set<string>;
+  gameSessionId?: string;
 }
 
 export const BengaliInput: React.FC<BengaliInputProps> = ({
   onGuess,
   disabled = false,
   alreadyGuessedWords,
+  gameSessionId,
 }) => {
   const [rawInput, setRawInput] = useState('');
   const [bengaliOutput, setBengaliOutput] = useState('');
@@ -21,6 +23,7 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [inputName] = useState(() => `bentexto_guess_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`);
 
   // Focus input on mount
   useEffect(() => {
@@ -152,26 +155,42 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
         </div>
       )}
 
-      {/* Main Input Form Bar */}
-      <form onSubmit={handleSubmit} className="relative">
+      {/* Main Input Bar */}
+      <form
+        onSubmit={handleSubmit}
+        autoComplete="off"
+        noValidate
+        className="relative"
+      >
         <div className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-[#253556] bg-[#15213B] p-1.5 sm:p-2 shadow-md transition focus-within:border-[#0095FF] focus-within:ring-2 focus-within:ring-[#0095FF]/20">
-          {/* Main Text Input */}
+          {/* Main Text Input with bulletproof anti-autocomplete settings */}
           <div className="relative flex-1 min-w-0">
             <input
               ref={inputRef}
               id="word-guess-input"
+              name={inputName}
               type="text"
               value={rawInput}
               disabled={disabled}
               onChange={(e) => setRawInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
               placeholder={
                 inputMode === 'phonetic'
-                  ? "Type word (e.g. bristi, pani, boi)..."
+                  ? "Type word (e.g. megh, sagor, boi)..."
                   : "সরাসরি বাংলায় লিখুন..."
               }
-              autoComplete="off"
+              autoComplete="one-time-code"
               autoCorrect="off"
+              autoCapitalize="none"
               spellCheck="false"
+              data-lpignore="true"
+              data-1p-ignore="true"
+              data-form-type="other"
               className="w-full bg-transparent px-2 sm:px-2.5 py-1.5 text-sm sm:text-base font-medium text-white placeholder:text-gray-400 focus:outline-none"
             />
           </div>
@@ -208,8 +227,9 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
 
           {/* Submit Button */}
           <button
-            type="submit"
+            type="button"
             id="submit-guess-btn"
+            onClick={() => handleSubmit()}
             disabled={disabled || !rawInput.trim()}
             className="flex h-9 sm:h-10 items-center justify-center gap-1 sm:gap-1.5 rounded-lg bg-[#0095FF] px-2.5 sm:px-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-[#0082E6] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer shrink-0"
           >
@@ -233,12 +253,12 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
         </div>
       )}
 
-      {/* Quick Starter Chips */}
+      {/* Quick Starter Chips with neutral non-secret words */}
       {!rawInput && !errorMsg && (
         <div className="mt-2 flex flex-col items-center gap-1.5 text-xs text-gray-400">
           <div className="flex items-center justify-center flex-wrap gap-1.5">
             <span className="text-[11px] uppercase tracking-wider font-semibold text-gray-400">Starter words:</span>
-            {['bristi', 'krishi', 'shurjo', 'shanti', 'ful', 'pani'].map((sample) => (
+            {['megh', 'sagor', 'batash', 'kalam', 'khata', 'gram'].map((sample) => (
               <button
                 key={sample}
                 type="button"
@@ -250,7 +270,7 @@ export const BengaliInput: React.FC<BengaliInputProps> = ({
             ))}
           </div>
           <div className="text-[10px] text-gray-400 text-center">
-            💡 Tip: Type <span className="font-mono text-cyan-400">kri</span> &rarr; <span className="text-white font-semibold">কৃ</span>, <span className="font-mono text-gray-300">bristi</span> (বৃষ্টি), <span className="font-mono text-gray-300">pani</span> (পানি)
+            💡 Tip: Type <span className="font-mono text-cyan-400">kri</span> &rarr; <span className="text-white font-semibold">কৃ</span>, <span className="font-mono text-gray-300">megh</span> (মেঘ), <span className="font-mono text-gray-300">sagor</span> (সাগর)
           </div>
         </div>
       )}

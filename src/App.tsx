@@ -160,9 +160,21 @@ export default function App() {
           // Do not auto-open the victory modal when simply browsing games
           setIsVictoryOpen(false);
         }
+      } else {
+        // Clean reset for new / unplayed days
+        setGuesses([]);
+        setIsSolved(false);
+        setSurrendered(false);
+        setHintsUsed(0);
+        setIsVictoryOpen(false);
       }
     } catch (e) {
       console.error('Failed to restore saved daily state', e);
+      setGuesses([]);
+      setIsSolved(false);
+      setSurrendered(false);
+      setHintsUsed(0);
+      setIsVictoryOpen(false);
     }
   }, [dateKey, isPractice]);
 
@@ -171,6 +183,12 @@ export default function App() {
     if (isPractice) return;
     // Don't overwrite an existing saved state with an empty state on game switch/mount
     if (guesses.length === 0 && !isSolved && !surrendered && hintsUsed === 0) {
+      return;
+    }
+
+    // Safety guard: ensure the secretWord corresponds to this daily puzzle before saving
+    const expectedWord = getDailySecretWord(dayNumber);
+    if (secretWord.id !== expectedWord.id) {
       return;
     }
 
@@ -188,7 +206,7 @@ export default function App() {
     } catch (e) {
       console.error('Failed to save daily state', e);
     }
-  }, [guesses, isSolved, surrendered, hintsUsed, dateKey, dayNumber, isPractice]);
+  }, [guesses, isSolved, surrendered, hintsUsed, dateKey, dayNumber, isPractice, secretWord]);
 
   // Auto-check for midnight transition
   useEffect(() => {
@@ -242,7 +260,7 @@ export default function App() {
       const updated = [evaluated, ...guesses];
       setGuesses(updated);
 
-      if (evaluated.rank === 1) {
+      if (evaluated.rank === 1 && evaluated.word === secretWord.word) {
         setIsSolved(true);
         const updatedStats = recordGameWin(dayNumber, guessNumber, isPractice);
         setStats(updatedStats);
@@ -501,6 +519,7 @@ export default function App() {
         {/* Bengali & Phonetic Input Box with unique key to force clean reset on game switch */}
         <BengaliInput
           key={`${isPractice ? 'practice' : 'daily'}-${secretWord.id}-${dateKey}`}
+          gameSessionId={`${isPractice ? 'practice' : 'daily'}-${secretWord.id}-${dateKey}`}
           onGuess={handleGuess}
           disabled={isSolved || surrendered}
           alreadyGuessedWords={alreadyGuessedWords}

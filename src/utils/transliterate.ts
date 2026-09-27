@@ -718,7 +718,7 @@ export function getPhoneticSuggestions(input: string): string[] {
   const set = new Set<string>();
   if (directTranslit) set.add(directTranslit);
 
-  // Exact & prefix matching in common dictionary first
+  // Exact phonetic match in common dictionary
   if (COMMON_BENGALI_PHONETICS[clean]) {
     set.add(COMMON_BENGALI_PHONETICS[clean]);
   }
@@ -737,12 +737,23 @@ export function getPhoneticSuggestions(input: string): string[] {
     set.add('ঋ' + directTranslit.slice(2));
   }
 
-  // Match other common words
-  Object.keys(COMMON_BENGALI_PHONETICS).forEach((key) => {
-    if (key.startsWith(clean) || clean.startsWith(key)) {
-      set.add(COMMON_BENGALI_PHONETICS[key]);
+  // Sibilant variations (sh vs s / শ vs স)
+  if (clean.includes('sh') || clean.includes('s')) {
+    const swapped = clean.includes('sh')
+      ? clean.replace(/sh/g, 's')
+      : clean.replace(/s/g, 'sh');
+    const alt = transliterateEnglishToBengali(swapped);
+    if (alt && alt !== directTranslit) {
+      set.add(alt);
     }
-  });
+  }
 
-  return Array.from(set).slice(0, 5);
+  // Vowel length variations (ee vs i, oo vs u)
+  if (clean.includes('ee')) {
+    set.add(transliterateEnglishToBengali(clean.replace(/ee/g, 'i')));
+  } else if (clean.includes('i')) {
+    set.add(transliterateEnglishToBengali(clean.replace(/i/g, 'ee')));
+  }
+
+  return Array.from(set).slice(0, 4);
 }
