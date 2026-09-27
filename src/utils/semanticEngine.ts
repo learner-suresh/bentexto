@@ -53,9 +53,18 @@ function levenshteinDistance(a: string, b: string): number {
 export function getPrecomputedRankings(secretWord: BengaliWord): Map<string, { rank: number; similarity: number; entry: VocabularyEntry }> {
   const results: { word: string; score: number; entry: VocabularyEntry }[] = [];
 
+  // Guarantee secretWord entry exists
+  const secretEntry: VocabularyEntry = {
+    word: secretWord.word,
+    translit: secretWord.translit,
+    meaningEn: secretWord.meaningEn,
+    category: secretWord.category,
+    tags: secretWord.tags || []
+  };
+
   VOCABULARY.forEach(entry => {
+    // Skip exact match here; secretWord is always assigned rank 1 directly
     if (entry.word === secretWord.word) {
-      results.push({ word: entry.word, score: 1.0, entry });
       return;
     }
 
@@ -124,40 +133,39 @@ export function getPrecomputedRankings(secretWord: BengaliWord): Map<string, { r
 
   const rankMap = new Map<string, { rank: number; similarity: number; entry: VocabularyEntry }>();
 
-  // Map to distinct rankings
+  // Secret word ALWAYS has Rank 1 and 100% similarity
+  rankMap.set(secretWord.word, { rank: 1, similarity: 100, entry: secretEntry });
+
+  // Map other words starting strictly at Rank >= 2
   results.forEach((item, index) => {
-    let rank = index + 1; // 1, 2, 3...
-    // If exact match
-    if (item.word === secretWord.word) {
-      rank = 1;
+    let rank = 2;
+    if (index <= 14) {
+      // High cluster: ranks 2 - 120
+      rank = Math.round(2 + index * 8);
+    } else if (index <= 34) {
+      // Warm cluster: ranks 122 - 350
+      rank = Math.round(122 + (index - 15) * 12);
+    } else if (index <= 54) {
+      // Moderate cluster: ranks 360 - 1200
+      rank = Math.round(360 + (index - 35) * 42);
     } else {
-      // Curve ranks to mirror semantic distribution (1 to ~5,000)
-      if (index > 0 && index <= 15) {
-        // High cluster: ranks 2 - 120
-        rank = Math.round(2 + (index - 1) * 8);
-      } else if (index > 15 && index <= 35) {
-        // Warm cluster: ranks 130 - 350
-        rank = Math.round(130 + (index - 16) * 11);
-      } else if (index > 35 && index <= 55) {
-        // Moderate cluster: ranks 360 - 1200
-        rank = Math.round(360 + (index - 36) * 42);
-      } else {
-        // Distant cluster: ranks 1250 - 5500
-        rank = Math.round(1250 + (index - 56) * 110);
-      }
+      // Distant cluster: ranks 1250 - 5500
+      rank = Math.round(1250 + (index - 55) * 110);
     }
 
-    // Similarity percentage between 0 and 100
+    rank = Math.max(2, rank); // STRICTLY Rank 2 or higher for non-secret words
+
     let similarity = 0;
-    if (rank === 1) {
-      similarity = 100;
-    } else if (rank <= 300) {
+    if (rank <= 300) {
       similarity = Math.round(75 + ((300 - rank) / 300) * 24);
     } else if (rank <= 1500) {
       similarity = Math.round(40 + ((1500 - rank) / 1200) * 34);
     } else {
       similarity = Math.max(5, Math.round(39 - (rank / 5000) * 34));
     }
+
+    // Similarity can never be 100% for anything other than Rank 1
+    similarity = Math.min(99, similarity);
 
     rankMap.set(item.word, { rank, similarity, entry: item.entry });
   });
@@ -176,7 +184,7 @@ export function evaluateWordGuess(
 ): GuessRecord {
   const cleanGuess = guessedWord.trim();
 
-  // 1. Exact match
+  // 1. Exact match - ONLY this can be Rank 1
   if (cleanGuess === secretWord.word) {
     return {
       word: cleanGuess,
@@ -192,12 +200,16 @@ export function evaluateWordGuess(
   // 2. Found in precomputed vocabulary map
   if (rankMap.has(cleanGuess)) {
     const data = rankMap.get(cleanGuess)!;
+    // Strict safety guard: non-matching words can never produce rank 1
+    const safeRank = cleanGuess === secretWord.word ? 1 : Math.max(2, data.rank);
+    const safeSim = safeRank === 1 ? 100 : Math.min(99, data.similarity);
+
     return {
       word: cleanGuess,
       translit: data.entry.translit,
       meaningEn: data.entry.meaningEn,
-      rank: data.rank,
-      similarity: data.similarity,
+      rank: safeRank,
+      similarity: safeSim,
       guessNumber,
       timestamp: Date.now()
     };
@@ -209,13 +221,14 @@ export function evaluateWordGuess(
   const maxLen = Math.max(cleanGuess.length, secretWord.word.length);
   const charRatio = Math.max(0, 1 - dist / maxLen);
 
-  // Approximate rank for unknown word
+  // Approximate rank for unknown word - strictly >= 200
   let rank = Math.round(2500 + (1 - charRatio) * 3500);
   if (charRatio > 0.6) {
     rank = Math.round(400 + (1 - charRatio) * 600);
   }
+  rank = Math.max(200, rank);
 
-  const similarity = Math.max(8, Math.round(charRatio * 60 + 15));
+  const similarity = Math.min(90, Math.max(8, Math.round(charRatio * 60 + 15)));
 
   return {
     word: cleanGuess,

@@ -68,7 +68,8 @@ export default function App() {
     } catch {}
     return getDailySecretWord(getTodayDayNumber());
   });
-  const [rankMap, setRankMap] = useState(() => getPrecomputedRankings(secretWord));
+  // Synchronously recompute rankings so rankMap is never stale or out-of-sync
+  const rankMap = useMemo(() => getPrecomputedRankings(secretWord), [secretWord]);
 
   // Game state
   const [guesses, setGuesses] = useState<GuessRecord[]>([]);
@@ -137,16 +138,6 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
 
-  // Recompute rankings only when the secret word actually changes
-  const prevWordRef = React.useRef(secretWord.word);
-  useEffect(() => {
-    if (prevWordRef.current !== secretWord.word) {
-      prevWordRef.current = secretWord.word;
-      const computed = getPrecomputedRankings(secretWord);
-      setRankMap(computed);
-    }
-  }, [secretWord]);
-
   // Load saved daily game state
   useEffect(() => {
     if (isPractice) {
@@ -166,10 +157,8 @@ export default function App() {
           setIsSolved(parsed.isSolved || false);
           setSurrendered(parsed.surrendered || false);
           setHintsUsed(parsed.hintsUsed || 0);
-
-          if (parsed.isSolved) {
-            setIsVictoryOpen(true);
-          }
+          // Do not auto-open the victory modal when simply browsing games
+          setIsVictoryOpen(false);
         }
       }
     } catch (e) {
@@ -180,6 +169,10 @@ export default function App() {
   // Save daily game state on changes
   useEffect(() => {
     if (isPractice) return;
+    // Don't overwrite an existing saved state with an empty state on game switch/mount
+    if (guesses.length === 0 && !isSolved && !surrendered && hintsUsed === 0) {
+      return;
+    }
 
     try {
       const storageKey = `bentexto_day_${dateKey}`;
@@ -275,6 +268,15 @@ export default function App() {
     setSurrendered(false);
     setHintsUsed(0);
     setHintMessage(null);
+  };
+
+  // Toggle handler specifically for Header dropdown (Daily vs Practice)
+  const handleHeaderTogglePractice = () => {
+    if (isPractice) {
+      handleReturnToDaily();
+    } else {
+      handleTogglePractice();
+    }
   };
 
   // Switch back to Daily mode
@@ -435,7 +437,7 @@ export default function App() {
         dayNumber={dayNumber}
         isPractice={isPractice}
         currentStreak={stats.currentStreak}
-        onTogglePractice={handleTogglePractice}
+        onTogglePractice={handleHeaderTogglePractice}
         onOpenStats={() => setIsStatsOpen(true)}
         onOpenHelp={() => setIsHelpOpen(true)}
         onSurrender={() => setIsSurrenderOpen(true)}
@@ -496,8 +498,9 @@ export default function App() {
           </div>
         )}
 
-        {/* Bengali & Phonetic Input Box */}
+        {/* Bengali & Phonetic Input Box with unique key to force clean reset on game switch */}
         <BengaliInput
+          key={`${isPractice ? 'practice' : 'daily'}-${secretWord.id}-${dateKey}`}
           onGuess={handleGuess}
           disabled={isSolved || surrendered}
           alreadyGuessedWords={alreadyGuessedWords}
