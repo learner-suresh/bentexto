@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { BengaliWord, GuessRecord, GameStats, SortMode } from './types';
 import { getPrecomputedRankings, evaluateWordGuess, getSemanticHintWord } from './utils/semanticEngine';
 import {
@@ -208,23 +208,28 @@ export default function App() {
     }
   }, [guesses, isSolved, surrendered, hintsUsed, dateKey, dayNumber, isPractice, secretWord]);
 
-  // Auto-check for midnight transition
+  // Auto-check for midnight transition (strictly only if user is actively on Today's puzzle and calendar rolls over)
+  const initialTodayKey = useRef(getTodayDateKey());
+
   useEffect(() => {
     const checkMidnight = () => {
-      const currentToday = getTodayDateKey();
-      if (currentToday !== dateKey && !isPractice) {
-        setDateKey(currentToday);
+      const realToday = getTodayDateKey();
+      // Only transition if the calendar day rolled over from initial load, AND the user is currently on that "today" puzzle
+      if (!isPractice && dateKey === initialTodayKey.current && realToday !== initialTodayKey.current) {
+        initialTodayKey.current = realToday;
         const newDayNumber = getTodayDayNumber();
+        setDateKey(realToday);
         setDayNumber(newDayNumber);
         setSecretWord(getDailySecretWord(newDayNumber));
         setGuesses([]);
         setIsSolved(false);
         setSurrendered(false);
         setHintsUsed(0);
+        setIsVictoryOpen(false);
       }
     };
 
-    const interval = setInterval(checkMidnight, 10000);
+    const interval = setInterval(checkMidnight, 30000);
     return () => clearInterval(interval);
   }, [dateKey, isPractice]);
 
@@ -306,12 +311,15 @@ export default function App() {
       localStorage.setItem('bentexto_active_mode', 'daily');
     } catch {}
 
-    const dailyWord = getDailySecretWord(dayNumber);
-    setSecretWord(dailyWord);
+    const targetDay = getTodayDayNumber();
+    const targetDateKey = getTodayDateKey();
+    setDayNumber(targetDay);
+    setDateKey(targetDateKey);
+    setSecretWord(getDailySecretWord(targetDay));
 
     // Restore daily state
     try {
-      const storageKey = `bentexto_day_${dateKey}`;
+      const storageKey = `bentexto_day_${targetDateKey}`;
       const savedData = localStorage.getItem(storageKey);
       if (savedData) {
         const parsed = JSON.parse(savedData);

@@ -6,6 +6,7 @@ import {
   Palette,
   HelpCircle,
   Play,
+  CheckCircle,
   Sparkles,
   Keyboard,
   BookOpen,
@@ -134,10 +135,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 type="button"
                 id="play-daily-btn"
                 onClick={() => onPlayDaily(selectedDay.dayNumber, selectedDay.dateKey)}
-                className="flex items-center justify-center gap-1.5 rounded-lg bg-[#0095FF] hover:bg-[#0082E6] text-white font-bold px-6 py-2 text-sm transition-all active:scale-95 shadow-md cursor-pointer"
+                className={`flex items-center justify-center gap-1.5 rounded-lg font-bold px-5 py-2 text-sm transition-all active:scale-95 shadow-md cursor-pointer ${
+                  selectedDay.isSolved
+                    ? 'bg-[#10B981]/20 border border-[#10B981]/40 text-[#10B981] hover:bg-[#10B981]/30'
+                    : 'bg-[#0095FF] hover:bg-[#0082E6] text-white'
+                }`}
               >
-                <Play className="h-3.5 w-3.5 fill-current" />
-                <span>Play</span>
+                {selectedDay.isSolved ? (
+                  <>
+                    <CheckCircle className="h-4 w-4 text-[#10B981]" />
+                    <span>Solved (সম্পন্ন)</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-3.5 w-3.5 fill-current" />
+                    <span>Play</span>
+                  </>
+                )}
               </button>
             </div>
 
